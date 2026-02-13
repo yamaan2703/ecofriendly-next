@@ -1,7 +1,4 @@
-"use client";
-
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
 import ProductSection from "@/components/ProductsSection";
 import BenefitsSection from "@/components/BenefitsSection";
 import FeaturesSection from "@/components/FeaturesSection";
@@ -15,13 +12,13 @@ import NewsLetter from "@/components/NewsLetter";
 import StickyBottomBar from "@/components/StickyBottomBar";
 import { useContent } from "@/contexts/ContentContext";
 
-export default function Home() {
+const Index = () => {
   const { switchToHome1, switchToHome2 } = useContent();
-  const searchParams = useSearchParams();
 
   useEffect(() => {
     // Check URL parameters to determine which product view to show
-    const view = searchParams.get("view");
+    const urlParams = new URLSearchParams(window.location.search);
+    const view = urlParams.get("view");
 
     console.log("Current URL:", window.location.href);
     console.log("View parameter:", view);
@@ -37,12 +34,12 @@ export default function Home() {
       // Clear the URL parameter after switching
       window.history.replaceState({}, document.title, "/");
     }
-  }, [searchParams, switchToHome1, switchToHome2]);
+  }, [switchToHome1, switchToHome2]);
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main>
+      {/* <main>
         <HeroSection />
         <ProductSection />
         <BenefitsSection />
@@ -51,9 +48,11 @@ export default function Home() {
         <ProductSpecSection />
         <ProductShowcaseSection />
         <NewsLetter />
-      </main>
-      <Footer />
-      <StickyBottomBar />
+      </main> */}
+      {/* <Footer /> */}
+      {/* <StickyBottomBar /> */}
     </div>
   );
-}
+};
+
+export default Index;

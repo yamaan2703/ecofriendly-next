@@ -1,20 +1,321 @@
-@import "tailwindcss";
-@plugin "tailwindcss-animate";
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Custom Font Declarations */
+@font-face {
+  font-family: 'Notulen Serif';
+  src: url('/fonts/FontsFree-Net-Notulen-Serif-Display-Extra-Bold-.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+  font-display: swap;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+@font-face {
+  font-family: 'Eurotypo';
+  src: url('/fonts/EurotypoBKL.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@font-face {
+  font-family: 'Eurotypo';
+  src: url('/fonts/EurotypoBKL-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Eurotypo';
+  src: url('/fonts/EurotypoBKL-Heavy.otf') format('opentype');
+  font-weight: 900;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Eurotypo';
+  src: url('/fonts/EurotypoBKL-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Eurotypo';
+  src: url('/fonts/EurotypoBKL-BoldItalic.otf') format('opentype');
+  font-weight: 700;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Eco-friendly Design System */
+    /* Main colors: #FFFFDD, #1E1E1E, #84B350 */
+    --background: 60 100% 93%; /* #FFFFDD */
+    --background-cream: 60 80% 97%;
+    --foreground: 0 0% 11%; /* #1E1E1E */
+    --foreground-eco: 178 98% 16%;
+    
+    /* Custom colors */
+    --dark-gray: 0 0% 11%; /* #1E1E1E */
+    --eco-green: 84 36% 49%; /* #84B350 */
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 12%;
+    --card-cream: 60 80% 97%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 12%;
+
+    --primary: 178 98% 16%;
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 178 60% 25%;
+    --primary-lighter: 178 40% 85%;
+
+    --secondary: 60 80% 97%;
+    --secondary-foreground: 0 0% 12%;
+
+    --muted: 60 40% 95%;
+    --muted-foreground: 0 0% 45%;
+
+    --accent: 178 40% 85%;
+    --accent-foreground: 178 98% 16%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 60 20% 90%;
+    --input: 60 20% 90%;
+    --ring: 178 98% 16%;
+
+    --radius: 0.75rem;
+
+    /* Eco-friendly gradients */
+    --gradient-eco: linear-gradient(135deg, hsl(178 98% 16%), hsl(178 60% 25%));
+    --gradient-cream: linear-gradient(135deg, hsl(60 80% 97%), hsl(0 0% 100%));
+    --gradient-subtle: linear-gradient(180deg, hsl(0 0% 100%), hsl(60 80% 97%));
+
+    /* Shadows */
+    --shadow-eco: 0 10px 30px -10px hsl(178 98% 16% / 0.2);
+    --shadow-soft: 0 4px 20px -4px hsl(0 0% 0% / 0.1);
+    --shadow-glow: 0 0 40px hsl(178 60% 25% / 0.15);
+
+    /* Animations */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-spring: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    --sidebar-background: 0 0% 98%;
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 210 40% 98%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 212.7 26.8% 83.9%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-size: 14px; /* Base font size for mobile */
+  }
+
+  @media (min-width: 640px) {
+    html {
+      font-size: 15px;
+    }
+  }
+
+  @media (min-width: 768px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    html {
+      font-size: 16px;
+    }
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* Hide scrollbar utility */
+@layer utilities {
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Quill Editor Styles for Blog Content */
+.quill-content {
+  @apply w-full;
+}
+
+.quill-content .ql-editor {
+  @apply p-0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: #374151;
+}
+
+@media (min-width: 768px) {
+  .quill-content .ql-editor {
+    font-size: 1rem;
+  }
+}
+
+.quill-content .ql-editor h1 {
+  @apply text-2xl sm:text-3xl font-bold text-gray-900 mb-4 sm:mb-6 mt-6 sm:mt-8;
+}
+
+.quill-content .ql-editor h2 {
+  @apply text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4 mt-5 sm:mt-6;
+}
+
+.quill-content .ql-editor h3 {
+  @apply text-lg sm:text-xl font-semibold text-gray-900 mb-2 sm:mb-3 mt-4 sm:mt-5;
+}
+
+.quill-content .ql-editor h4 {
+  @apply text-base sm:text-lg font-semibold text-gray-900 mb-2 mt-3 sm:mt-4;
+}
+
+.quill-content .ql-editor h5 {
+  @apply text-base font-semibold text-gray-900 mb-2 mt-3;
+}
+
+.quill-content .ql-editor h6 {
+  @apply text-sm font-semibold text-gray-900 mb-2 mt-3;
+}
+
+.quill-content .ql-editor p {
+  @apply text-gray-700 mb-3 sm:mb-4 leading-relaxed text-sm sm:text-base;
+}
+
+.quill-content .ql-editor ul {
+  @apply list-disc list-inside mb-4 text-gray-700;
+}
+
+.quill-content .ql-editor ol {
+  @apply list-decimal list-inside mb-4 text-gray-700;
+}
+
+.quill-content .ql-editor li {
+  @apply mb-2;
+}
+
+.quill-content .ql-editor blockquote {
+  @apply border-l-4 border-green-500 pl-4 italic text-gray-600 my-4;
+}
+
+.quill-content .ql-editor a {
+  @apply text-green-600 hover:text-green-700 underline;
+}
+
+.quill-content .ql-editor strong {
+  @apply font-bold text-gray-900;
+}
+
+.quill-content .ql-editor em {
+  @apply italic;
+}
+
+.quill-content .ql-editor u {
+  @apply underline;
+}
+
+.quill-content .ql-editor code {
+  @apply bg-gray-100 text-gray-800 px-2 py-1 rounded text-sm font-mono;
+}
+
+.quill-content .ql-editor pre {
+  @apply bg-gray-100 p-4 rounded-lg overflow-x-auto my-4;
+}
+
+.quill-content .ql-editor pre code {
+  @apply bg-transparent p-0;
+}
+
+.quill-content .ql-editor img {
+  @apply max-w-full h-auto rounded-lg my-4;
+}
+
+.quill-content .ql-editor table {
+  @apply w-full border-collapse border border-gray-300 my-4;
+}
+
+.quill-content .ql-editor th,
+.quill-content .ql-editor td {
+  @apply border border-gray-300 px-4 py-2 text-left;
+}
+
+.quill-content .ql-editor th {
+  @apply bg-gray-50 font-semibold;
 }
