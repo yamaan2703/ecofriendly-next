@@ -14,13 +14,11 @@ import {
 import { loadStripe } from "@stripe/stripe-js";
 
 const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY ||
-  "pk_test_51QxVatP9hDUFADJxnST8fN7cSMgCOXVHXg4b3A9KZfx3zS7F4Hj6WdZ7OBgmKEOkwBJhz8iH4f0QqWZE3KG9fUoP00xVq8NJDQ"
+  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ""
 );
 
 // Stripe Secret Key for creating payment intents (server-side)
-const STRIPE_SECRET_KEY =
-  "sk_test_51SKEdkBpt6BQXlhkCt4s3KBadkIbJz0QAtugks187SmZnPjQH6V7Fq9h0vG5NNm5BcCdJRxaPFBXp7emgREzEeA300ICz7UUw8";
+const STRIPE_SECRET_KEY = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY || "";
 
 interface CheckoutFormData {
   fullName: string;
@@ -127,6 +125,17 @@ const CheckoutForm: React.FC<{
           description: "Please wait a moment and try again.",
           duration: 3000,
         });
+        return;
+      }
+
+      if (!STRIPE_SECRET_KEY) {
+        console.error("❌ Stripe Secret Key not configured");
+        toast({
+          title: "Payment Configuration Error",
+          description: "Stripe is not properly configured. Please contact support.",
+          duration: 5000,
+        });
+        setIsProcessing(false);
         return;
       }
 
