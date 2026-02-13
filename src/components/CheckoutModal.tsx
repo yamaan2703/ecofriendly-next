@@ -17,9 +17,6 @@ const stripePromise = loadStripe(
   process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || ""
 );
 
-// Stripe Secret Key for creating payment intents (server-side)
-const STRIPE_SECRET_KEY = process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY || "";
-
 interface CheckoutFormData {
   fullName: string;
   email: string;
@@ -128,17 +125,6 @@ const CheckoutForm: React.FC<{
         return;
       }
 
-      if (!STRIPE_SECRET_KEY) {
-        console.error("❌ Stripe Secret Key not configured");
-        toast({
-          title: "Payment Configuration Error",
-          description: "Stripe is not properly configured. Please contact support.",
-          duration: 5000,
-        });
-        setIsProcessing(false);
-        return;
-      }
-
       setIsProcessing(true);
       console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
       console.log("💳 Starting payment process...");
@@ -178,7 +164,7 @@ const CheckoutForm: React.FC<{
 
         console.log("✅ Payment method created:", paymentMethod?.id);
 
-        // STEP 2: Create Payment Intent with Stripe API
+        // STEP 2: Create Payment Intent via API route (server-side)
         console.log("💳 Step 2: Creating payment intent...");
 
         const productIds = cartItems.map((item) => item.id);
@@ -187,49 +173,37 @@ const CheckoutForm: React.FC<{
           .map((item) => item.product_name)
           .join(", ");
 
-        // Prepare form data for Stripe API (same as Postman)
-        const stripeFormData = new URLSearchParams();
-        stripeFormData.append("amount", Math.round(finalTotal * 100).toString()); // Convert to cents
-        stripeFormData.append("currency", "usd");
-        stripeFormData.append("payment_method", paymentMethod.id);
-        stripeFormData.append("confirm", "true"); // Automatically confirm
-        stripeFormData.append("description", `Order for ${formData.fullName}`);
-        // Configure automatic payment methods to not allow redirects (card-only)
-        stripeFormData.append("automatic_payment_methods[enabled]", "true");
-        stripeFormData.append(
-          "automatic_payment_methods[allow_redirects]",
-          "never"
-        );
+        // Prepare metadata
+        const metadata = {
+          customer_name: formData.fullName,
+          customer_email: formData.email,
+          customer_phone: formData.phone_Number,
+          user_id: user.id.toString(),
+          products: productNames,
+          product_ids: productIds.join(","),
+          quantities: quantities.join(","),
+          shipping_address: `${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}`,
+        };
 
-        // Add metadata
-        stripeFormData.append("metadata[customer_name]", formData.fullName);
-        stripeFormData.append("metadata[customer_email]", formData.email);
-        stripeFormData.append("metadata[customer_phone]", formData.phone_Number);
-        stripeFormData.append("metadata[user_id]", user.id.toString());
-        stripeFormData.append("metadata[products]", productNames);
-        stripeFormData.append("metadata[product_ids]", productIds.join(","));
-        stripeFormData.append("metadata[quantities]", quantities.join(","));
-        stripeFormData.append(
-          "metadata[shipping_address]",
-          `${formData.address}, ${formData.city}, ${formData.state} ${formData.zipCode}`
-        );
+        console.log("💰 Payment Amount:", finalTotal, "USD");
 
-        // Make request to Stripe API with Bearer Auth (Stripe's preferred method)
-        console.log(
-          "🔑 Using Secret Key:",
-          STRIPE_SECRET_KEY ? "Key present ✅" : "Key missing ❌"
-        );
-        console.log("💰 Payment Amount:", Math.round(finalTotal * 100), "cents");
-
+        // Call our server-side API route
         const paymentIntentResponse = await fetch(
-          "https://api.stripe.com/v1/payment_intents",
+          "/api/create-payment-intent",
           {
             method: "POST",
             headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Bearer ${STRIPE_SECRET_KEY}`,
+              "Content-Type": "application/json",
             },
-            body: stripeFormData.toString(),
+            body: JSON.stringify({
+              amount: finalTotal,
+              currency: "usd",
+              payment_method: paymentMethod.id,
+              metadata: {
+                ...metadata,
+                description: `Order for ${formData.fullName}`,
+              },
+            }),
           }
         );
 
@@ -239,12 +213,12 @@ const CheckoutForm: React.FC<{
 
         if (!paymentIntentResponse.ok) {
           console.error("❌ Payment Intent Error:", paymentIntentData);
-          throw new Error(paymentIntentData.error?.message || "Payment failed");
+          throw new Error(paymentIntentData.error || "Payment failed");
         }
 
         console.log("✅ Payment Intent created:", paymentIntentData.id);
         console.log("📊 Payment Status:", paymentIntentData.status);
-        console.log("💰 Amount Charged:", paymentIntentData.amount / 100, "USD");
+        console.log("💰 Amount Charged:", finalTotal, "USD");
 
         // STEP 3: Handle payment result
         if (paymentIntentData.status === "succeeded") {
@@ -284,21 +258,7 @@ const CheckoutForm: React.FC<{
             throw orderError;
           }
 
-          console.log("✅ Order created successfully!");
-          console.log("📦 Order ID:", orderDataResult[0].id);
 
-          // SUCCESS SUMMARY
-          console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-          console.log("🎉 PAYMENT COMPLETE!");
-          console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
-          console.log("💳 Stripe Payment ID:", paymentIntentData.id);
-          console.log("💾 Database Payment ID:", paymentRecord.id);
-          console.log("📦 Order ID:", orderDataResult[0].id);
-          console.log("💰 Amount Paid: $" + finalTotal.toFixed(2));
-          console.log("👤 Customer:", formData.fullName);
-          console.log("📧 Email:", formData.email);
-          console.log("📍 Shipping:", `${formData.city}, ${formData.state}`);
-          console.log("━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
 
           toast({
             title: "Payment Successful! 🎉",
