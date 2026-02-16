@@ -132,11 +132,10 @@ const LoginPage: React.FC = () => {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-4 py-2 text-sm outline-none border rounded-xl focus:ring-2 focus:ring-[#005655] focus:border-transparent transition-all duration-300 ${
-                    errors.email
-                      ? "border-red-300 bg-red-50"
-                      : "border-gray-300"
-                  }`}
+                  className={`w-full pl-10 pr-4 py-2 text-sm outline-none border rounded-xl focus:ring-2 focus:ring-[#005655] focus:border-transparent transition-all duration-300 ${errors.email
+                    ? "border-red-300 bg-red-50"
+                    : "border-gray-300"
+                    }`}
                   placeholder="Enter your email"
                 />
               </div>
@@ -167,11 +166,10 @@ const LoginPage: React.FC = () => {
                   name="password"
                   value={formData.password}
                   onChange={handleInputChange}
-                  className={`w-full pl-10 pr-12 py-2 text-sm outline-none border rounded-xl focus:ring-2 focus:ring-[#005655] focus:border-transparent transition-all duration-300 ${
-                    errors.password
-                      ? "border-red-300 bg-red-50"
-                      : "border-gray-300"
-                  }`}
+                  className={`w-full pl-10 pr-12 py-2 text-sm outline-none border rounded-xl focus:ring-2 focus:ring-[#005655] focus:border-transparent transition-all duration-300 ${errors.password
+                    ? "border-red-300 bg-red-50"
+                    : "border-gray-300"
+                    }`}
                   placeholder="Enter your password"
                 />
                 <button

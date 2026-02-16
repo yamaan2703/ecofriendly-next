@@ -271,6 +271,10 @@ const CheckoutForm: React.FC<{
           setIsProcessing(false);
           onCheckoutSuccess();
           setStep(1);
+          // Close modal after successful payment
+          setTimeout(() => {
+            onClose();
+          }, 500);
         } else if (paymentIntentData.status === "requires_action") {
           // Handle 3D Secure authentication if needed
           console.log("🔐 Requires additional authentication...");
@@ -317,6 +321,10 @@ const CheckoutForm: React.FC<{
           setIsProcessing(false);
           onCheckoutSuccess();
           setStep(1);
+          // Close modal after successful payment
+          setTimeout(() => {
+            onClose();
+          }, 500);
         } else {
           throw new Error(`Payment status: ${paymentIntentData.status}`);
         }
@@ -663,6 +671,21 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
       });
       setStep(1);
     }
+  }, [isOpen, cartItems.length, totalPrice]);
+
+  // Prevent body scroll when modal is open
+  useEffect(() => {
+    if (isOpen) {
+      // Save the current overflow value
+      const originalOverflow = window.getComputedStyle(document.body).overflow;
+      // Prevent body scroll
+      document.body.style.overflow = "hidden";
+
+      // Cleanup: restore original overflow when modal closes or component unmounts
+      return () => {
+        document.body.style.overflow = originalOverflow;
+      };
+    }
   }, [isOpen]);
 
   if (!isOpen) return null;
@@ -671,8 +694,8 @@ const CheckoutModal: React.FC<CheckoutModalProps> = ({
     <>
       <div className="fixed inset-0 bg-black/60 z-50" onClick={onClose} />
 
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-y-auto">
-        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full my-8 max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 overflow-hidden">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           <Elements stripe={stripePromise}>
             <CheckoutForm
               formData={formData}

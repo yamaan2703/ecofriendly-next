@@ -149,28 +149,28 @@ const SignupPage: React.FC = () => {
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.5 }}
-                    className="bg-white rounded-2xl shadow-xl p-8 border border-gray-100"
+                    className="bg-card-cream rounded-2xl shadow-xl p-8 border border-primary-lighter"
                 >
                     <form onSubmit={handleSubmit} className="space-y-3">
                         {/* Name Field */}
                         <div>
                             <label
                                 htmlFor="name"
-                                className="block text-sm font-medium text-gray-700 mb-2"
+                                className="block text-sm font-medium text-foreground mb-2"
                             >
                                 Full Name
                             </label>
                             <div className="relative">
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                                 <input
                                     type="text"
                                     id="name"
                                     name="name"
                                     value={formData.name}
                                     onChange={handleInputChange}
-                                    className={`w-full pl-10 pr-4 py-2 text-sm outline-none border rounded-xl focus:ring-2 focus:ring-[#005655] focus:border-transparent transition-all duration-300 ${errors.name
-                                        ? "border-red-300 bg-red-50"
-                                        : "border-gray-300"
+                                    className={`w-full pl-10 pr-4 py-2 text-sm outline-none border rounded-xl bg-background focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 ${errors.name
+                                        ? "border-destructive bg-red-50"
+                                        : "border-input"
                                         }`}
                                     placeholder="Enter your full name"
                                 />
@@ -190,21 +190,21 @@ const SignupPage: React.FC = () => {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-gray-700 mb-2"
+                                className="block text-sm font-medium text-foreground mb-2"
                             >
                                 Email Address
                             </label>
                             <div className="relative">
-                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                                 <input
                                     type="email"
                                     id="email"
                                     name="email"
                                     value={formData.email}
                                     onChange={handleInputChange}
-                                    className={`w-full pl-10 pr-4 py-2 text-sm outline-none border rounded-xl focus:ring-2 focus:ring-[#005655] focus:border-transparent transition-all duration-300 ${errors.email
-                                        ? "border-red-300 bg-red-50"
-                                        : "border-gray-300"
+                                    className={`w-full pl-10 pr-4 py-2 text-sm outline-none border rounded-xl bg-background focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 ${errors.email
+                                        ? "border-destructive bg-red-50"
+                                        : "border-input"
                                         }`}
                                     placeholder="Enter your email"
                                 />
@@ -224,28 +224,28 @@ const SignupPage: React.FC = () => {
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium text-gray-700 mb-2"
+                                className="block text-sm font-medium text-foreground mb-2"
                             >
                                 Password
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                                 <input
                                     type={showPassword ? "text" : "password"}
                                     id="password"
                                     name="password"
                                     value={formData.password}
                                     onChange={handleInputChange}
-                                    className={`w-full pl-10 pr-12 py-2 text-sm outline-none border rounded-xl focus:ring-2 focus:ring-[#005655] focus:border-transparent transition-all duration-300 ${errors.password
-                                        ? "border-red-300 bg-red-50"
-                                        : "border-gray-300"
+                                    className={`w-full pl-10 pr-12 py-2 text-sm outline-none border rounded-xl bg-background focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 ${errors.password
+                                        ? "border-destructive bg-red-50"
+                                        : "border-input"
                                         }`}
                                     placeholder="Enter your password"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowPassword(!showPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     {showPassword ? (
                                         <EyeOff className="w-5 h-5" />
@@ -269,28 +269,28 @@ const SignupPage: React.FC = () => {
                         <div>
                             <label
                                 htmlFor="confirmPassword"
-                                className="block text-sm font-medium text-gray-700 mb-2"
+                                className="block text-sm font-medium text-foreground mb-2"
                             >
                                 Confirm Password
                             </label>
                             <div className="relative">
-                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                                 <input
                                     type={showConfirmPassword ? "text" : "password"}
                                     id="confirmPassword"
                                     name="confirmPassword"
                                     value={formData.confirmPassword}
                                     onChange={handleInputChange}
-                                    className={`w-full pl-10 pr-12 py-2 text-sm outline-none border rounded-xl focus:ring-2 focus:ring-[#005655] focus:border-transparent transition-all duration-300 ${errors.confirmPassword
-                                        ? "border-red-300 bg-red-50"
-                                        : "border-gray-300"
+                                    className={`w-full pl-10 pr-12 py-2 text-sm outline-none border rounded-xl bg-background focus:ring-2 focus:ring-primary focus:border-primary transition-all duration-300 ${errors.confirmPassword
+                                        ? "border-destructive bg-red-50"
+                                        : "border-input"
                                         }`}
                                     placeholder="Confirm your password"
                                 />
                                 <button
                                     type="button"
                                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                                 >
                                     {showConfirmPassword ? (
                                         <EyeOff className="w-5 h-5" />
@@ -323,11 +323,11 @@ const SignupPage: React.FC = () => {
                                         is_newsletter: e.target.checked,
                                     }))
                                 }
-                                className="h-4 w-4 rounded border-gray-300 text-[#005655] focus:ring-2 focus:ring-[#005655] focus:ring-offset-0"
+                                className="h-4 w-4 rounded border-input text-primary focus:ring-2 focus:ring-primary focus:ring-offset-0"
                             />
                             <label
                                 htmlFor="is_newsletter"
-                                className="text-sm text-gray-600 cursor-pointer"
+                                className="text-sm text-foreground cursor-pointer"
                             >
                                 Subscribe to our newsletter for eco-friendly tips and updates
                             </label>
@@ -339,7 +339,7 @@ const SignupPage: React.FC = () => {
                             disabled={isLoading}
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
-                            className="w-full bg-[#005655] text-white py-3 text-sm px-6 rounded-xl font-semibold transition-all duration-300 hover:bg-[#004444] disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+                            className="w-full bg-primary text-primary-foreground py-3 text-sm px-6 rounded-xl font-semibold transition-all duration-300 hover:bg-primary-light disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
                         >
                             {isLoading ? (
                                 <motion.div
@@ -355,11 +355,11 @@ const SignupPage: React.FC = () => {
 
                     {/* Switch to Login */}
                     <div className="mt-3 text-center">
-                        <p className="text-gray-600">
+                        <p className="text-foreground">
                             Already have an account?{" "}
                             <button
                                 onClick={handleGoToLogin}
-                                className="text-[#005655] text-sm font-semibold hover:underline transition-colors"
+                                className="text-primary text-sm font-semibold hover:underline transition-colors"
                             >
                                 Sign in
                             </button>
@@ -374,13 +374,13 @@ const SignupPage: React.FC = () => {
                     transition={{ delay: 0.8 }}
                     className="text-center mt-3"
                 >
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-muted-foreground">
                         By signing up, you agree to our{" "}
-                        <Link href="#" className="text-[#005655] hover:underline">
+                        <Link href="/terms-conditions" className="text-primary hover:underline">
                             Terms of Service
                         </Link>{" "}
                         and{" "}
-                        <Link href="#" className="text-[#005655] hover:underline">
+                        <Link href="/privacy-policy" className="text-primary hover:underline">
                             Privacy Policy
                         </Link>
                     </p>
