@@ -37,8 +37,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const product = await getProduct();
 
   const title = product
-    ? `${product.product_name} - Eco-friendly Shop`
-    : "Bamboo Toothbrush 10 Pack - Eco-friendly Shop";
+    ? `${product.product_name} - Ecofriendlyshop`
+    : "Bamboo Toothbrush 10 Pack - Ecofriendlyshop";
   const description = product
     ? product.product_description
     : "Switch to eco-friendly brushing with our Bamboo Toothbrush 10-Pack. Charcoal bristles, sustainable bamboo, and plastic-free packaging for a greener clean.";
@@ -89,11 +89,12 @@ export default async function ToothbrushLayout({
       "@context": "http://schema.org/",
       "@type": "Product",
       name: product.product_name,
-      description: product.product_description,
+      url: "https://ecofriendlyshop.us/product/bamboo-toothbrush-10-pack",
       image: product.product_images?.map((img: string) => {
         const cleanImg = img.replace(/^\/+/, "").replace(/^product-images\//, "");
         return `https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/${cleanImg}`;
       }) || [],
+      description: product.product_description,
       brand: {
         "@type": "Brand",
         name: "EcoFriendly Shop",
@@ -109,6 +110,22 @@ export default async function ToothbrushLayout({
         inventoryLevel: {
           "@type": "QuantitativeValue",
           value: product.quantity,
+        },
+        shippingDetails: {
+          "@type": "OfferShippingDetails",
+          shippingRate: {
+            "@type": "MonetaryAmount",
+            value: 0,
+            currency: "USD",
+          },
+          shippingDestination: {
+            "@type": "DefinedRegion",
+            addressCountry: "US",
+          },
+        },
+        seller: {
+          "@type": "Organization",
+          name: "EcoFriendly Shop",
         },
       },
     }

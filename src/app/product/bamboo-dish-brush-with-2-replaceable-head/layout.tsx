@@ -37,8 +37,8 @@ export async function generateMetadata(): Promise<Metadata> {
   const product = await getProduct();
 
   const title = product
-    ? `${product.product_name} - Eco-friendly Shop`
-    : "Bamboo Dish Brush – Durable, Eco-Friendly & Sustainable";
+    ? `${product.product_name} - Ecofriendlyshop`
+    : "Bamboo Dish Brush with 2 Replaceable Heads - Ecofriendlyshop";
   const description = product
     ? product.product_description
     : "Bamboo dish brush with 2 replaceable heads – durable, eco-friendly, and ideal for dishes. Make your kitchen zero-waste today!";
@@ -89,11 +89,12 @@ export default async function DishwasherLayout({
       "@context": "http://schema.org/",
       "@type": "Product",
       name: product.product_name,
-      description: product.product_description,
+      url: "https://ecofriendlyshop.us/product/bamboo-dish-brush-with-2-replaceable-head",
       image: product.product_images?.map((img: string) => {
         const cleanImg = img.replace(/^\/+/, "").replace(/^product-images\//, "");
         return `https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/${cleanImg}`;
       }) || [],
+      description: product.product_description,
       brand: {
         "@type": "Brand",
         name: "EcoFriendly Shop",
@@ -109,6 +110,22 @@ export default async function DishwasherLayout({
         inventoryLevel: {
           "@type": "QuantitativeValue",
           value: product.quantity,
+        },
+        shippingDetails: {
+          "@type": "OfferShippingDetails",
+          shippingRate: {
+            "@type": "MonetaryAmount",
+            value: 0,
+            currency: "USD",
+          },
+          shippingDestination: {
+            "@type": "DefinedRegion",
+            addressCountry: "US",
+          },
+        },
+        seller: {
+          "@type": "Organization",
+          name: "EcoFriendly Shop",
         },
       },
     }
