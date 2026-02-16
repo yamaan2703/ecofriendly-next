@@ -23,6 +23,9 @@ export default function DishwasherPage() {
   }, [switchToHome2]);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === "undefined") return;
+
     // Update meta tags for SEO
     document.title = "Bamboo Dish Brush – Durable, Eco-Friendly & Sustainable";
 
@@ -50,10 +53,14 @@ export default function DishwasherPage() {
       "https://ecofriendlyshop.us/product/bamboo-dish-brush-with-2-replaceable-head"
     );
 
-    // Add Schema Markup (JSON-LD)
-    const schemaScript = document.createElement("script");
-    schemaScript.type = "application/ld+json";
-    schemaScript.id = "product-schema";
+    // Add Schema Markup (JSON-LD) - only if not already present
+    let schemaScript = document.getElementById("product-schema") as HTMLScriptElement;
+    if (!schemaScript) {
+      schemaScript = document.createElement("script");
+      schemaScript.type = "application/ld+json";
+      schemaScript.id = "product-schema";
+      document.head.appendChild(schemaScript);
+    }
     schemaScript.textContent = JSON.stringify({
       "@context": "http://schema.org/",
       "@type": "Product",
@@ -123,13 +130,6 @@ export default function DishwasherPage() {
       ],
     });
 
-    // Remove existing schema if present
-    const existingSchema = document.getElementById("product-schema");
-    if (existingSchema) {
-      existingSchema.remove();
-    }
-
-    document.head.appendChild(schemaScript);
 
     // Cleanup on unmount
     return () => {

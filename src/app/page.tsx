@@ -1,59 +1,25 @@
 "use client";
 
 import { useEffect } from "react";
-import { useSearchParams } from "next/navigation";
-import ProductSection from "@/components/ProductsSection";
-import BenefitsSection from "@/components/BenefitsSection";
-import FeaturesSection from "@/components/FeaturesSection";
-import ProductDetailingSection from "@/components/ProductDetailSection";
-import HeroSection from "@/components/HeroSection";
-import ProductSpecSection from "@/components/SpecificationSection";
-import ProductShowcaseSection from "@/components/ProductShowcaseSection";
-import Footer from "@/components/Footer";
-import Navbar from "@/components/Navbar";
-import NewsLetter from "@/components/NewsLetter";
-import StickyBottomBar from "@/components/StickyBottomBar";
-import { useContent } from "@/contexts/ContentContext";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
-  const { switchToHome1, switchToHome2 } = useContent();
-  const searchParams = useSearchParams();
+  const router = useRouter();
 
   useEffect(() => {
-    // Check URL parameters to determine which product view to show
-    const view = searchParams.get("view");
+    // Redirect to the main product page
+    router.replace("/product/bamboo-toothbrush-10-pack");
+  }, [router]);
 
-    console.log("Current URL:", window.location.href);
-    console.log("View parameter:", view);
-
-    if (view === "toothbrush") {
-      console.log("Switching to toothbrush view");
-      switchToHome1();
-      // Clear the URL parameter after switching
-      window.history.replaceState({}, document.title, "/");
-    } else if (view === "dishwasher") {
-      console.log("Switching to dishwasher view");
-      switchToHome2();
-      // Clear the URL parameter after switching
-      window.history.replaceState({}, document.title, "/");
-    }
-  }, [searchParams, switchToHome1, switchToHome2]);
-
+  // Show loading state while redirecting
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main>
-        <HeroSection />
-        <ProductSection />
-        <BenefitsSection />
-        <FeaturesSection />
-        <ProductDetailingSection />
-        <ProductSpecSection />
-        <ProductShowcaseSection />
-        <NewsLetter />
-      </main>
-      <Footer />
-      <StickyBottomBar />
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="text-center">
+        <div className="w-16 h-16 border-4 border-primary/20 rounded-full mx-auto mb-4">
+          <div className="w-full h-full border-4 border-primary border-t-transparent rounded-full animate-spin"></div>
+        </div>
+        <p className="text-muted-foreground">Redirecting...</p>
+      </div>
     </div>
   );
 }

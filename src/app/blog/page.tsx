@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -23,11 +23,14 @@ interface BlogPost {
   primary_keyword: string;
   status: boolean;
   updated_at: string | null;
+  slug?: string | null; // Database se slug field (optional)
+  url?: string | null; // Database se URL field (optional)
 }
 
 // BlogCard Component
 const BlogCard: React.FC<{ post: BlogPost }> = ({ post }) => {
-  const router = useRouter();
+  // Database id field is already a slug, use it directly
+  const slug = post.id;
 
   const getImageUrl = (filename: string) => {
     return `https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/blog-images/${filename}`;
@@ -95,13 +98,13 @@ const BlogCard: React.FC<{ post: BlogPost }> = ({ post }) => {
           </h3>
 
           {/* Read More Button */}
-          <button
-            onClick={() => router.push(`/blog/${post.id}`)}
+          <Link
+            href={`/blog/${slug}`}
             className="inline-flex items-center gap-2 text-[#005655] font-bold text-sm hover:gap-3 transition-all"
           >
             <span>Read Article</span>
             <FiArrowRight className="w-4 h-4" />
-          </button>
+          </Link>
         </div>
       </div>
     </div>
@@ -157,16 +160,25 @@ export default function BlogPage() {
 
   useEffect(() => {
     const fetchBlogs = async () => {
+      if (!supabase) {
+        console.error("Supabase is not configured");
+        setLoading(false);
+        return;
+      }
+
       const { data, error } = await supabase
         .from("blogs")
-        .select("*")
+        .select("*") // Select all fields (slug/url will be included if they exist)
         .eq("status", true)
         .order("created_at", { ascending: false });
 
       if (error) {
         console.error("Error fetching blogs:", error.message);
+        console.error("Error details:", error);
+        setBlogPosts([]);
       } else {
-        setBlogPosts(data as BlogPost[]);
+        console.log("Blogs fetched successfully:", data?.length || 0);
+        setBlogPosts((data as BlogPost[]) || []);
       }
       setLoading(false);
     };

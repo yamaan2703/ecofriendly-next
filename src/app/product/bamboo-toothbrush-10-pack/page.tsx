@@ -23,6 +23,9 @@ export default function ToothbrushPage() {
   }, [switchToHome1]);
 
   useEffect(() => {
+    // Only run on client side
+    if (typeof window === "undefined") return;
+
     // Update meta tags for SEO
     document.title = "Bamboo Toothbrush 10 Pack - Eco-friendly Shop";
 
@@ -50,10 +53,14 @@ export default function ToothbrushPage() {
       "https://ecofriendlyshop.us/product/bamboo-toothbrush-10-pack"
     );
 
-    // Add Schema Markup (JSON-LD)
-    const schemaScript = document.createElement("script");
-    schemaScript.type = "application/ld+json";
-    schemaScript.id = "product-schema";
+    // Add Schema Markup (JSON-LD) - only if not already present
+    let schemaScript = document.getElementById("product-schema") as HTMLScriptElement;
+    if (!schemaScript) {
+      schemaScript = document.createElement("script");
+      schemaScript.type = "application/ld+json";
+      schemaScript.id = "product-schema";
+      document.head.appendChild(schemaScript);
+    }
     schemaScript.textContent = JSON.stringify({
       "@context": "http://schema.org/",
       "@type": "Product",
@@ -128,13 +135,6 @@ export default function ToothbrushPage() {
       ],
     });
 
-    // Remove existing schema if present
-    const existingSchema = document.getElementById("product-schema");
-    if (existingSchema) {
-      existingSchema.remove();
-    }
-
-    document.head.appendChild(schemaScript);
 
     // Cleanup on unmount
     return () => {

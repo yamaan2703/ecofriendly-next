@@ -66,6 +66,11 @@ export default function CartPage() {
       if (cartItems.length === 0) return;
 
       try {
+        if (!supabase) {
+          console.error("Supabase is not configured");
+          return;
+        }
+
         const productIds = cartItems.map((item) => item.id);
         const { data, error } = await supabase
           .from("products")
