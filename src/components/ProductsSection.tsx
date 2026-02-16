@@ -17,7 +17,7 @@ import { useContent } from "@/contexts/ContentContext";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 
 // Product interface based on actual Supabase data structure
 interface Product {
@@ -62,6 +62,12 @@ const ProductSection = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
+        if (!supabase || !isSupabaseConfigured()) {
+          console.error("Supabase is not configured");
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase
           .from("products")
           .select("*")
@@ -87,10 +93,10 @@ const ProductSection = () => {
   const product = products.length > 0 ? products[0] : null;
   const discountPercentage = product
     ? Math.round(
-        ((product.actual_price - product.discounted_price) /
-          product.actual_price) *
-          100
-      )
+      ((product.actual_price - product.discounted_price) /
+        product.actual_price) *
+      100
+    )
     : 0;
 
   const incrementQuantity = () => {
@@ -222,11 +228,10 @@ const ProductSection = () => {
                 <button
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
-                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-md sm:rounded-lg overflow-hidden border-2 flex-shrink-0 ${
-                    selectedImageIndex === index
-                      ? "border-primary"
-                      : "border-gray-200"
-                  }`}
+                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-md sm:rounded-lg overflow-hidden border-2 flex-shrink-0 ${selectedImageIndex === index
+                    ? "border-primary"
+                    : "border-gray-200"
+                    }`}
                 >
                   <img
                     src={getImageUrl(image)}
@@ -314,8 +319,8 @@ const ProductSection = () => {
                     {product.quantity === 0
                       ? "Out of Stock"
                       : isAuthenticated
-                      ? "Add to Cart"
-                      : "Login to Add to Cart"}
+                        ? "Add to Cart"
+                        : "Login to Add to Cart"}
                   </button>
                 </div>
               </div>

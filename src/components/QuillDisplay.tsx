@@ -11,7 +11,9 @@ const QuillDisplay: React.FC<QuillDisplayProps> = ({
 }) => {
   // Dynamically import Quill CSS only when component is used
   useEffect(() => {
-    import("quill/dist/quill.snow.css");
+    import("quill/dist/quill.snow.css").catch(() => {
+      // CSS import failed, styles may already be loaded
+    });
   }, []);
 
   return (

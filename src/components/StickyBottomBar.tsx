@@ -6,7 +6,7 @@ import { useContent } from "@/contexts/ContentContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
+import { isSupabaseConfigured, supabase } from "@/lib/supabase";
 
 // Product interface based on Supabase data structure
 interface Product {
@@ -39,6 +39,12 @@ const StickyBottomBar: React.FC = () => {
     const fetchProduct = async () => {
       try {
         setLoading(true);
+        if (!supabase || !isSupabaseConfigured()) {
+          console.error("Supabase is not configured");
+          setLoading(false);
+          return;
+        }
+
         const { data, error } = await supabase
           .from("products")
           .select("*")
@@ -183,7 +189,7 @@ const StickyBottomBar: React.FC = () => {
               <div className="flex items-center space-x-3">
                 <div className="w-12 h-12 bg-[#E7F0CE] rounded-lg flex items-center justify-center flex-shrink-0">
                   {product.product_images &&
-                  product.product_images.length > 0 ? (
+                    product.product_images.length > 0 ? (
                     <img
                       src={getImageUrl(product.product_images[0])}
                       alt={product.product_name}
@@ -266,8 +272,8 @@ const StickyBottomBar: React.FC = () => {
                   {product.quantity === 0
                     ? "Out of Stock"
                     : isAuthenticated
-                    ? content.stickyBar.buyNowText
-                    : "Login to Buy"}
+                      ? content.stickyBar.buyNowText
+                      : "Login to Buy"}
                 </Button>
               </div>
             </div>
@@ -279,7 +285,7 @@ const StickyBottomBar: React.FC = () => {
                 <div className="flex items-center space-x-3">
                   <div className="w-12 h-12 bg-[#E7F0CE] rounded-lg flex items-center justify-center flex-shrink-0">
                     {product.product_images &&
-                    product.product_images.length > 0 ? (
+                      product.product_images.length > 0 ? (
                       <img
                         src={getImageUrl(product.product_images[0])}
                         alt={product.product_name}
@@ -364,8 +370,8 @@ const StickyBottomBar: React.FC = () => {
                   {product.quantity === 0
                     ? "Out of Stock"
                     : isAuthenticated
-                    ? content.stickyBar.buyNowText
-                    : "Login to Buy"}
+                      ? content.stickyBar.buyNowText
+                      : "Login to Buy"}
                 </Button>
               </div>
             </div>

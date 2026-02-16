@@ -23,7 +23,7 @@ import { HiOutlineSparkles } from "react-icons/hi2";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { useAuth } from "@/contexts/AuthContext";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import { pdf } from "@react-pdf/renderer";
 import OrderPDF from "@/components/OrderPDF";
 import toast from "react-hot-toast";
@@ -125,6 +125,11 @@ export default function ProfilePage() {
     setIsNewsletterLoading(true);
 
     try {
+      if (!supabase || !isSupabaseConfigured()) {
+        toast.error("Database connection not available");
+        return;
+      }
+
       const newStatus = !isNewsletterSubscribed;
 
       const { error } = await supabase
@@ -157,6 +162,11 @@ export default function ProfilePage() {
       if (!user?.id) return;
 
       try {
+        if (!supabase || !isSupabaseConfigured()) {
+          console.error("Supabase is not configured");
+          return;
+        }
+
         const { data, error } = await supabase
           .from("users")
           .select("is_newsletter")
@@ -221,6 +231,12 @@ export default function ProfilePage() {
       try {
         setLoadingOrders(true);
 
+        if (!supabase || !isSupabaseConfigured()) {
+          console.error("Supabase is not configured");
+          setLoadingOrders(false);
+          return;
+        }
+
         // Fetch orders for the logged-in user
         const { data: ordersData, error: ordersError } = await supabase
           .from("order")
@@ -245,6 +261,12 @@ export default function ProfilePage() {
 
         // Fetch product details for all products
         if (allProductIds.size > 0) {
+          if (!supabase || !isSupabaseConfigured()) {
+            console.error("Supabase is not configured");
+            setLoadingOrders(false);
+            return;
+          }
+
           const { data: productsData, error: productsError } = await supabase
             .from("products")
             .select(
@@ -479,8 +501,8 @@ export default function ProfilePage() {
                                       Price:
                                     </span>
                                     {product?.actual_price &&
-                                    product?.discounted_price &&
-                                    product.actual_price >
+                                      product?.discounted_price &&
+                                      product.actual_price >
                                       product.discounted_price ? (
                                       <>
                                         <span className="text-gray-500 line-through text-xs">
@@ -564,9 +586,9 @@ export default function ProfilePage() {
                   <span className="text-sm font-semibold text-gray-800">
                     {user?.created_at
                       ? new Date(user.created_at).toLocaleDateString("en-US", {
-                          month: "short",
-                          year: "numeric",
-                        })
+                        month: "short",
+                        year: "numeric",
+                      })
                       : "..."}
                   </span>
                 </div>
@@ -613,11 +635,10 @@ export default function ProfilePage() {
                 <button
                   onClick={handleNewsletterToggle}
                   disabled={isNewsletterLoading}
-                  className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${
-                    isNewsletterSubscribed
+                  className={`w-full px-4 py-2 rounded-lg text-sm font-medium transition-colors flex items-center justify-center gap-2 ${isNewsletterSubscribed
                       ? "bg-gray-100 text-gray-700 hover:bg-gray-200"
                       : "bg-[#005655] text-white hover:bg-[#004444]"
-                  } disabled:opacity-50 disabled:cursor-not-allowed`}
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
                 >
                   {isNewsletterLoading ? (
                     <div className="w-4 h-4 border-2 border-current border-t-transparent rounded-full animate-spin"></div>

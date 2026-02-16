@@ -1,10 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "");
+// Initialize Stripe only if secret key is available (not during static export build)
+const stripe = process.env.STRIPE_SECRET_KEY 
+  ? new Stripe(process.env.STRIPE_SECRET_KEY)
+  : null;
 
 export async function POST(request: NextRequest) {
     try {
+        if (!stripe || !process.env.STRIPE_SECRET_KEY) {
+            return NextResponse.json(
+                { error: "Stripe secret key is not configured" },
+                { status: 500 }
+            );
+        }
+
         const body = await request.json();
         const {
             amount,
@@ -12,13 +22,6 @@ export async function POST(request: NextRequest) {
             payment_method,
             metadata,
         } = body;
-
-        if (!process.env.STRIPE_SECRET_KEY) {
-            return NextResponse.json(
-                { error: "Stripe secret key is not configured" },
-                { status: 500 }
-            );
-        }
 
         if (!amount || !payment_method) {
             return NextResponse.json(

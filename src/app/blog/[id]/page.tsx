@@ -45,6 +45,31 @@ async function getBlogPost(id: string): Promise<BlogPost | null> {
   }
 }
 
+// Generate static params for all blog posts (required for static export)
+export async function generateStaticParams() {
+  const supabase = createServerClient();
+  if (!supabase) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from("blogs")
+      .select("id")
+      .eq("status", true);
+
+    if (error || !data) {
+      console.error("Error fetching blog IDs for static generation:", error);
+      return [];
+    }
+
+    return data.map((blog) => ({
+      id: blog.id,
+    }));
+  } catch (error) {
+    console.error("Error generating static params:", error);
+    return [];
+  }
+}
+
 export default async function BlogDetailPage({
   params,
 }: {

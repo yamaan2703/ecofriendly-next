@@ -3,7 +3,7 @@ import { Mail, CheckCircle, Leaf, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useContent } from "@/contexts/ContentContext";
 import { SiMinutemailer } from "react-icons/si";
-import { supabase } from "@/lib/supabase";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
 import toast from "react-hot-toast";
 import { useAuth } from "@/contexts/AuthContext";
 
@@ -36,6 +36,12 @@ function NewsLetter() {
     setIsLoading(true);
 
     try {
+      if (!supabase || !isSupabaseConfigured()) {
+        toast.error("Database connection not available");
+        setIsLoading(false);
+        return;
+      }
+
       // Check if user exists with this email
       const { data: userData, error: fetchError } = await supabase
         .from("users")
@@ -64,6 +70,12 @@ function NewsLetter() {
       }
 
       // Update is_newsletter to true
+      if (!supabase || !isSupabaseConfigured()) {
+        toast.error("Database connection not available");
+        setIsLoading(false);
+        return;
+      }
+
       const { error: updateError } = await supabase
         .from("users")
         .update({ is_newsletter: true })
