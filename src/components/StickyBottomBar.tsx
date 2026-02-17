@@ -121,16 +121,6 @@ const StickyBottomBar: React.FC = () => {
   };
 
   const handleBuyNow = async () => {
-    if (!isAuthenticated) {
-      toast({
-        title: "Login Required",
-        description: "Please login first to add products to cart.",
-        variant: "destructive",
-        duration: 4000,
-      });
-      return;
-    }
-
     if (product) {
       // Check if product is out of stock (UI-level check)
       if (product.quantity === 0) {
@@ -271,9 +261,7 @@ const StickyBottomBar: React.FC = () => {
                 >
                   {product.quantity === 0
                     ? "Out of Stock"
-                    : isAuthenticated
-                      ? content.stickyBar.buyNowText
-                      : "Login to Buy"}
+                    : "Buy Now"}
                 </Button>
               </div>
             </div>
@@ -369,9 +357,7 @@ const StickyBottomBar: React.FC = () => {
                 >
                   {product.quantity === 0
                     ? "Out of Stock"
-                    : isAuthenticated
-                      ? content.stickyBar.buyNowText
-                      : "Login to Buy"}
+                    : "Buy Now"}
                 </Button>
               </div>
             </div>

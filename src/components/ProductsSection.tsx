@@ -131,16 +131,6 @@ const ProductSection = () => {
   };
 
   const handleAddToCart = async () => {
-    if (!isAuthenticated) {
-      toast({
-        title: "Login Required",
-        description: "Please login first to add products to cart.",
-        variant: "destructive",
-        duration: 4000,
-      });
-      return;
-    }
-
     if (product) {
       // Check if product is out of stock (UI-level check)
       if (product.quantity === 0) {
@@ -318,9 +308,7 @@ const ProductSection = () => {
                     <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
                     {product.quantity === 0
                       ? "Out of Stock"
-                      : isAuthenticated
-                        ? "Add to Cart"
-                        : "Login to Add to Cart"}
+                      : "Add to Cart"}
                   </button>
                 </div>
               </div>

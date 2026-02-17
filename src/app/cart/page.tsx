@@ -273,14 +273,6 @@ export default function CartPage() {
                     </div>
                   </div>
                 </div>
-                <button
-                  onClick={() => router.push("/")}
-                  className="inline-flex items-center gap-2 px-8 py-4 bg-[#005655] text-white font-semibold rounded-xl hover:bg-[#004444] transition-colors"
-                >
-                  <Package className="w-5 h-5" />
-                  Browse Products
-                  <ArrowRight className="w-5 h-5" />
-                </button>
               </div>
             </div>
           ) : (

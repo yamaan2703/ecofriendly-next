@@ -4,7 +4,6 @@ const nextConfig: NextConfig = {
   /* config options here */
   // Static export configuration for Hostinger
   output: 'export',
-  distDir: '.out',
 
   // SEO Optimizations
   compress: true,

@@ -63,17 +63,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({
     product: Omit<CartItem, "quantity">,
     quantity: number
   ) => {
-    // Check if user is authenticated
-    if (!isAuthenticated) {
-      toast({
-        title: "Login Required",
-        description: "Please login first to add products to cart.",
-        variant: "destructive",
-        duration: 4000,
-      });
-      return;
-    }
-
     try {
       // Check if Supabase is configured
       if (!supabase) {

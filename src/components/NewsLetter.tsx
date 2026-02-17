@@ -150,7 +150,7 @@ function NewsLetter() {
                   type="submit"
                   variant="default"
                   size="sm"
-                  className="text-sm sm:text-base py-2 sm:py-2.5 px-6 sm:px-8 whitespace-nowrap shadow-md sm:shadow-lg hover:shadow-xl transition-all flex items-center gap-2 justify-center"
+                  className="bg-primary hover:bg-primary-light text-primary-foreground text-sm sm:text-base py-2 sm:py-2.5 px-6 sm:px-8 whitespace-nowrap shadow-md sm:shadow-lg hover:shadow-xl transition-all flex items-center gap-2 justify-center"
                   disabled={isLoading}
                 >
                   <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" />
