@@ -1,6 +1,30 @@
 import type { Metadata } from "next";
 import { createServerClient } from "@/lib/supabase-server";
 
+// Required for static export (output: 'export') – pre-generate all blog paths
+export async function generateStaticParams(): Promise<{ id: string }[]> {
+  const supabase = createServerClient();
+  if (!supabase) return [];
+
+  try {
+    const { data, error } = await supabase
+      .from("blogs")
+      .select("id")
+      .eq("status", true);
+
+    if (error || !data) {
+      console.error("Error fetching blog IDs for static generation:", error);
+      return [];
+    }
+
+    return data.map((blog) => ({ id: blog.id }));
+  } catch {
+    return [];
+  }
+}
+
+export const dynamicParams = false;
+
 interface BlogPost {
   id: string;
   blog_title: string;

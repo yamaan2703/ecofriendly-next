@@ -45,8 +45,8 @@ async function getBlogPost(id: string): Promise<BlogPost | null> {
   }
 }
 
-// Generate static params for all blog posts (required for static export)
-export async function generateStaticParams() {
+// Required for static export (output: 'export') – must be on the page that owns [id]
+export async function generateStaticParams(): Promise<{ id: string }[]> {
   const supabase = createServerClient();
   if (!supabase) return [];
 
@@ -61,14 +61,13 @@ export async function generateStaticParams() {
       return [];
     }
 
-    return data.map((blog) => ({
-      id: blog.id,
-    }));
-  } catch (error) {
-    console.error("Error generating static params:", error);
+    return data.map((blog) => ({ id: blog.id }));
+  } catch {
     return [];
   }
 }
+
+export const dynamicParams = false;
 
 export default async function BlogDetailPage({
   params,
