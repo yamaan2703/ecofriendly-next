@@ -18,8 +18,8 @@ const nextConfig: NextConfig = {
     minimumCacheTTL: 60,
   },
 
-  // Trailing slash for better compatibility
-  trailingSlash: true,
+  // No trailing slash on URLs (e.g. /blog/slug instead of /blog/slug/)
+  trailingSlash: false,
 
   // Note: Headers are not supported in static export
   // They need to be configured on the hosting server (Hostinger)

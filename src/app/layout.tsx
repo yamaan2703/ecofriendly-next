@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Providers } from "@/components/providers";
@@ -88,10 +89,7 @@ export const metadata: Metadata = {
     },
   },
   verification: {
-    // Add your verification codes here
-    // google: "your-google-verification-code",
-    // yandex: "your-yandex-verification-code",
-    // bing: "your-bing-verification-code",
+    google: "ZLH3FbOu6mqLMQaQzSP3QSpI6FLYF1jOVEp8RM-qLSU",
   },
 };
 
@@ -110,6 +108,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         suppressHydrationWarning
       >
+        <Script
+          id="clarity"
+          strategy="afterInteractive"
+          dangerouslySetInnerHTML={{
+            __html: `(function(c,l,a,r,i,t,y){c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);})(window, document, "clarity", "script", "q28sc66yxa");`,
+          }}
+        />
         <Providers>{children}</Providers>
       </body>
     </html>
