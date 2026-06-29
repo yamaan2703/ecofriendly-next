@@ -87,8 +87,12 @@ const Navbar: React.FC = () => {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const showNavbarBg = isScrolled || isOpen;
+  const showNavbarBg = isScrolled || isOpen || !isHomePage;
   const isHeroNav = isHomePage && !showNavbarBg;
+  const showNavElevation = isScrolled || isOpen;
+  const logoSrc = isHeroNav
+    ? "/images/ecofriendly_light.png"
+    : "/images/ecofriendly_dark.png";
 
   const getNavLinkClass = (isActive: boolean) => {
     if (isHeroNav) {
@@ -112,10 +116,9 @@ const Navbar: React.FC = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${showNavbarBg
-        ? "border-b border-primary/10 bg-[#FFFFDD] shadow-md backdrop-blur-sm"
-        : "bg-transparent"
-        }`}
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        showNavbarBg ? "bg-[#FFFFDD] backdrop-blur-sm" : "bg-transparent"
+      } ${showNavElevation ? "border-b border-primary/10 shadow-md" : ""}`}
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-[4.25rem] items-center justify-between gap-4">
@@ -126,13 +129,9 @@ const Navbar: React.FC = () => {
             aria-label="Go to homepage"
           >
             <img
-              src={
-                showNavbarBg
-                  ? "/images/ecofriendly_dark.png"
-                  : "/images/ecofriendly_light.png"
-              }
+              src={logoSrc}
               alt="Ecofriendly Shop"
-              className={`h-8 w-auto object-contain sm:h-9`}
+              className="h-9 w-auto min-w-[7rem] object-contain object-left sm:h-10 sm:min-w-[8rem]"
             />
           </button>
 
