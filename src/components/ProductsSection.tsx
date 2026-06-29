@@ -18,6 +18,10 @@ import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import {
+  ProductDetailsAccordion,
+  type ProductDetailsAccordionData,
+} from "@/components/product/ProductDetailsAccordion";
 
 // Product interface based on actual Supabase data structure
 interface Product {
@@ -34,7 +38,17 @@ interface Product {
   updated_at: string;
 }
 
-const ProductSection = () => {
+interface ProductPageCopy {
+  title: string;
+  shortDescription: string;
+}
+
+interface ProductSectionProps {
+  productCopy?: ProductPageCopy;
+  productDetails?: ProductDetailsAccordionData;
+}
+
+const ProductSection = ({ productCopy, productDetails }: ProductSectionProps) => {
   const { content, currentPage } = useContent();
   const { addToCart } = useCart();
   const { isAuthenticated } = useAuth();
@@ -194,39 +208,28 @@ const ProductSection = () => {
 
   return (
     <div className="min-h-screen py-6 sm:py-8 md:py-10 px-4 sm:px-6 lg:px-8">
-      <div className="container mx-auto max-w-5xl">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
+      <div
+        className={`container mx-auto ${productCopy ? "max-w-7xl" : "max-w-5xl"}`}
+      >
+        <div className="grid grid-cols-1 items-start gap-6 sm:gap-8 md:gap-10 lg:grid-cols-2 lg:gap-12">
           {/* Left - Image */}
-          <div className="space-y-4 sm:space-y-6">
-            {/* Main Image */}
-            <div className="border-2 border-primary rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg">
-              <div className="w-full h-64 sm:h-80 md:h-96 flex items-center justify-center p-4">
-                <img
-                  src={getImageUrl(productImages[selectedImageIndex])}
-                  alt={product.product_name}
-                  className="max-w-full max-h-full object-contain"
-                  onError={(e) => {
-                    e.currentTarget.style.display = "none";
-                  }}
-                />
-              </div>
-            </div>
-
+          <div className="flex items-start gap-3 sm:gap-4">
             {/* Thumbnails */}
-            <div className="flex gap-2 sm:gap-3 overflow-x-auto scrollbar-hide">
+            <div className="flex flex-col gap-2.5 flex-shrink-0 sm:gap-3">
               {productImages.map((image, index) => (
                 <button
                   key={index}
                   onClick={() => setSelectedImageIndex(index)}
-                  className={`w-14 h-14 sm:w-16 sm:h-16 rounded-md sm:rounded-lg overflow-hidden border-2 flex-shrink-0 ${selectedImageIndex === index
-                    ? "border-primary"
-                    : "border-gray-200"
-                    }`}
+                  className={`h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 overflow-hidden rounded-lg border-2 flex-shrink-0 transition-colors ${
+                    selectedImageIndex === index
+                      ? "border-primary"
+                      : "border-gray-200 hover:border-primary/40"
+                  }`}
                 >
                   <img
                     src={getImageUrl(image)}
                     alt={`View ${index + 1}`}
-                    className="w-full h-full object-cover"
+                    className="h-full w-full object-cover"
                     onError={(e) => {
                       e.currentTarget.style.display = "none";
                     }}
@@ -234,25 +237,62 @@ const ProductSection = () => {
                 </button>
               ))}
             </div>
+
+            {/* Main Image */}
+            <div className="flex flex-1 items-start">
+              <div className="flex h-72 w-full items-start justify-center rounded-xl border border-primary/15 bg-background/50 p-3 sm:h-96 md:h-[28rem] lg:h-[32rem]">
+                <img
+                  src={getImageUrl(productImages[selectedImageIndex])}
+                  alt={product.product_name}
+                  className="max-h-full max-w-full object-contain"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                  }}
+                />
+              </div>
+            </div>
           </div>
 
           {/* Right - Product Info */}
           <div className="space-y-3 sm:space-y-4">
             {/* Title */}
             <div>
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground mb-2">
-                {product.product_name}
+              <h1
+                className={`mb-2 font-bold text-foreground ${
+                  productCopy
+                    ? "text-lg sm:text-xl md:text-2xl"
+                    : "text-xl sm:text-2xl md:text-3xl"
+                }`}
+              >
+                {productCopy?.title ?? product.product_name}
               </h1>
+              {productCopy?.shortDescription && (
+                <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
+                  {productCopy.shortDescription}
+                </p>
+              )}
             </div>
 
             {/* Price */}
             <div>
               <div className="flex items-baseline gap-2 sm:gap-3">
-                <span className="text-3xl sm:text-4xl md:text-5xl font-bold text-primary">
+                <span
+                  className={`font-bold text-primary ${
+                    productCopy
+                      ? "text-2xl sm:text-3xl"
+                      : "text-3xl sm:text-4xl md:text-5xl"
+                  }`}
+                >
                   ${product.discounted_price}
                 </span>
                 {product.actual_price > product.discounted_price && (
-                  <span className="text-xl sm:text-2xl text-muted-foreground line-through">
+                  <span
+                    className={`text-muted-foreground line-through ${
+                      productCopy
+                        ? "text-base sm:text-lg"
+                        : "text-xl sm:text-2xl"
+                    }`}
+                  >
                     ${product.actual_price}
                   </span>
                 )}
@@ -272,19 +312,37 @@ const ProductSection = () => {
 
             {/* Quantity */}
             <div>
-              <label className="block text-foreground font-medium text-sm sm:text-base mb-2">
+              <label
+                className={`mb-2 block font-medium text-foreground ${
+                  productCopy ? "text-xs sm:text-sm" : "text-sm sm:text-base"
+                }`}
+              >
                 Quantity
               </label>
-              <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
-                <div className="flex items-center gap-1 sm:gap-2">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <div className="flex items-center gap-1 sm:gap-1.5">
                   <button
                     onClick={decrementQuantity}
                     disabled={quantity <= 1 || product.quantity === 0}
-                    className="w-8 h-8 sm:w-10 sm:h-10 border border-primary rounded-lg flex items-center justify-center hover:bg-primary-lighter disabled:opacity-50"
+                    className={`flex items-center justify-center rounded-md border border-primary hover:bg-primary-lighter disabled:opacity-50 ${
+                      productCopy
+                        ? "h-8 w-8"
+                        : "h-8 w-8 sm:h-10 sm:w-10 rounded-lg"
+                    }`}
                   >
-                    <Minus className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Minus
+                      className={
+                        productCopy ? "h-3.5 w-3.5" : "h-3 w-3 sm:h-4 sm:w-4"
+                      }
+                    />
                   </button>
-                  <span className="w-10 sm:w-12 text-center font-semibold text-base sm:text-lg">
+                  <span
+                    className={`text-center font-semibold ${
+                      productCopy
+                        ? "w-8 text-sm"
+                        : "w-10 text-base sm:w-12 sm:text-lg"
+                    }`}
+                  >
                     {quantity}
                   </span>
                   <button
@@ -292,59 +350,78 @@ const ProductSection = () => {
                     disabled={
                       product.quantity === 0 || quantity >= product.quantity
                     }
-                    className="w-8 h-8 sm:w-10 sm:h-10 border border-primary rounded-lg flex items-center justify-center hover:bg-primary-lighter disabled:opacity-50"
+                    className={`flex items-center justify-center rounded-md border border-primary hover:bg-primary-lighter disabled:opacity-50 ${
+                      productCopy
+                        ? "h-8 w-8"
+                        : "h-8 w-8 sm:h-10 sm:w-10 rounded-lg"
+                    }`}
                   >
-                    <Plus className="w-3 h-3 sm:w-4 sm:h-4" />
+                    <Plus
+                      className={
+                        productCopy ? "h-3.5 w-3.5" : "h-3 w-3 sm:h-4 sm:w-4"
+                      }
+                    />
                   </button>
                 </div>
 
                 {/* Add to Cart */}
-                <div className="flex-1 min-w-[200px]">
-                  <button
-                    onClick={handleAddToCart}
-                    disabled={product.quantity === 0}
-                    className="w-full bg-primary hover:bg-primary-light text-primary-foreground font-semibold py-2 sm:py-3 px-4 sm:px-6 rounded-lg flex items-center justify-center gap-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-sm sm:text-base"
-                  >
-                    <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                    {product.quantity === 0
-                      ? "Out of Stock"
-                      : "Add to Cart"}
-                  </button>
+                <button
+                  onClick={handleAddToCart}
+                  disabled={product.quantity === 0}
+                  className={`flex items-center justify-center gap-1.5 rounded-md bg-primary font-semibold text-primary-foreground transition-colors hover:bg-primary-light disabled:cursor-not-allowed disabled:opacity-50 ${
+                    productCopy
+                      ? "px-4 py-2 text-xs sm:text-sm"
+                      : "min-w-[200px] flex-1 gap-2 rounded-lg px-4 py-2 text-sm sm:px-6 sm:py-3 sm:text-base"
+                  }`}
+                >
+                  <ShoppingCart
+                    className={
+                      productCopy ? "h-3.5 w-3.5" : "h-4 w-4 sm:h-5 sm:w-5"
+                    }
+                  />
+                  {product.quantity === 0 ? "Out of Stock" : "Add to Cart"}
+                </button>
+              </div>
+            </div>
+
+            {productDetails && (
+              <ProductDetailsAccordion data={productDetails} />
+            )}
+
+            {!productCopy && (
+              <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4">
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+                  <span className="text-foreground text-xs sm:text-sm">
+                    Free Shipping
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+                  <span className="text-foreground text-xs sm:text-sm">
+                    Secure Payment
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Package className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
+                  <span className="text-foreground text-xs sm:text-sm">
+                    Easy Returns
+                  </span>
                 </div>
               </div>
-            </div>
-
-            {/* Features */}
-            <div className="grid grid-cols-1 xs:grid-cols-3 gap-3 sm:gap-4">
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Truck className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
-                <span className="text-foreground text-xs sm:text-sm">
-                  Free Shipping
-                </span>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Shield className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
-                <span className="text-foreground text-xs sm:text-sm">
-                  Secure Payment
-                </span>
-              </div>
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Package className="w-4 h-4 sm:w-5 sm:h-5 text-primary flex-shrink-0" />
-                <span className="text-foreground text-xs sm:text-sm">
-                  Easy Returns
-                </span>
-              </div>
-            </div>
+            )}
 
             {/* Description */}
-            <div>
-              <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
-                Description
-              </h3>
-              <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm md:text-base">
-                {product.product_description}
-              </p>
-            </div>
+            {!productCopy && (
+              <div>
+                <h3 className="text-lg sm:text-xl font-semibold text-foreground mb-2 sm:mb-3">
+                  Description
+                </h3>
+                <p className="text-muted-foreground leading-relaxed text-xs sm:text-sm md:text-base">
+                  {product.product_description}
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

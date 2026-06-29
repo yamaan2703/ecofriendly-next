@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { createServerClient } from "@/lib/supabase-server";
+import { toothbrushPageContent } from "@/data/toothbrush-page-content";
 
 interface Product {
   id: number;
@@ -37,11 +38,9 @@ export async function generateMetadata(): Promise<Metadata> {
   const product = await getProduct();
 
   const title = product
-    ? `${product.product_name} - Ecofriendlyshop`
-    : "Bamboo Toothbrush 10 Pack - Ecofriendlyshop";
-  const description = product
-    ? product.product_description
-    : "Switch to eco-friendly brushing with our Bamboo Toothbrush 10-Pack. Charcoal bristles, sustainable bamboo, and plastic-free packaging for a greener clean.";
+    ? `${toothbrushPageContent.title} - Ecofriendlyshop`
+    : `${toothbrushPageContent.title} - Ecofriendlyshop`;
+  const description = toothbrushPageContent.shortDescription;
   const imageUrl = product && product.product_images && product.product_images.length > 0
     ? `https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/${product.product_images[0].replace(/^\/+/, "").replace(/^product-images\//, "")}`
     : "https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/1761213979281-imxyk5nmey.png";
@@ -142,8 +141,8 @@ export default async function ToothbrushLayout({
       {/* Server-rendered product data for SEO - visible in view source */}
       {product && (
         <div style={{ display: "none" }} aria-hidden="true" itemScope itemType="https://schema.org/Product">
-          <h1 itemProp="name">{product.product_name}</h1>
-          <p itemProp="description">{product.product_description}</p>
+          <h1 itemProp="name">{toothbrushPageContent.title}</h1>
+          <p itemProp="description">{toothbrushPageContent.shortDescription}</p>
           <span itemProp="offers" itemScope itemType="https://schema.org/Offer">
             <meta itemProp="price" content={product.discounted_price.toString()} />
             <meta itemProp="priceCurrency" content="USD" />

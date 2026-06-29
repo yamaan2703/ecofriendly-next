@@ -85,9 +85,11 @@ export function ProductBenefitsSection({
           <h2 className="text-3xl font-bold text-foreground sm:text-4xl">
             {title}
           </h2>
-          <p className="mx-auto mt-4 max-w-2xl text-sm font-normal leading-relaxed text-muted-foreground sm:text-base">
-            {description}
-          </p>
+          {description ? (
+            <p className="mx-auto mt-4 max-w-2xl text-sm font-normal leading-relaxed text-muted-foreground sm:text-base">
+              {description}
+            </p>
+          ) : null}
         </motion.div>
 
         <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-8 xl:gap-12">
