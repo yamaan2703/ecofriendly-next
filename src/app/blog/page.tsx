@@ -6,11 +6,8 @@ import Link from "next/link";
 import { supabase } from "@/lib/supabase";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { FiClock, FiUser, FiArrowRight } from "react-icons/fi";
-import { BsBookmarkHeart } from "react-icons/bs";
-import { HiOutlineSparkles } from "react-icons/hi2";
+import { ArrowRight, Clock, User } from "lucide-react";
 
-// BlogPost Type
 interface BlogPost {
   id: string;
   blog_title: string;
@@ -23,121 +20,114 @@ interface BlogPost {
   primary_keyword: string;
   status: boolean;
   updated_at: string | null;
-  slug?: string | null; // Database se slug field (optional)
-  url?: string | null; // Database se URL field (optional)
+  slug?: string | null;
+  url?: string | null;
 }
 
-// BlogCard Component
-const BlogCard: React.FC<{ post: BlogPost }> = ({ post }) => {
-  // Database id field is already a slug, use it directly
+const BlogCard: React.FC<{ post: BlogPost; index: number }> = ({
+  post,
+  index,
+}) => {
   const slug = post.id;
 
-  const getImageUrl = (filename: string) => {
-    return `https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/blog-images/${filename}`;
-  };
+  const getImageUrl = (filename: string) =>
+    `https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/blog-images/${filename}`;
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("en-US", {
+  const formatDate = (dateString: string) =>
+    new Date(dateString).toLocaleDateString("en-US", {
       month: "short",
       day: "numeric",
       year: "numeric",
     });
-  };
 
   return (
-    <div className="group h-full">
-      <div className="h-full bg-[#DCE7C8] rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-shadow border border-primary">
-        {/* Image Section */}
-        <div className="relative h-56 overflow-hidden bg-white">
+    <motion.div
+      initial={{ y: 14 }}
+      whileInView={{ y: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5, delay: index * 0.08 }}
+      className="h-full"
+    >
+      <Link
+        href={`/blog/${slug}`}
+        className="group flex h-full flex-col overflow-hidden border border-primary/15 bg-background transition-shadow hover:shadow-md"
+      >
+        {/* Image */}
+        <div className="relative h-52 overflow-hidden bg-[#DCE7C8]">
           {post.featured_image ? (
             <img
               src={getImageUrl(post.featured_image)}
               alt={post.blog_title}
-              className="w-full h-full object-cover"
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center bg-[#DCE7C8]">
-              <div className="text-center">
-                <BsBookmarkHeart className="w-16 h-16 text-[#005655] mx-auto mb-3" />
-                <p className="text-[#005655] font-bold text-lg">Eco Story</p>
-              </div>
+            <div className="flex h-full w-full items-center justify-center">
+              <span className="text-4xl">🌿</span>
             </div>
           )}
-
-          {/* Featured Badge */}
-          <div className="absolute top-3 right-3 bg-[#005655] px-3 py-1.5 rounded-lg">
-            <div className="flex items-center gap-1.5">
-              <HiOutlineSparkles className="w-3.5 h-3.5 text-white" />
-              <span className="text-xs font-bold text-white">Featured</span>
-            </div>
-          </div>
         </div>
 
-        {/* Content Section */}
-        <div className="p-5">
-          {/* Meta Info */}
-          <div className="flex items-center gap-4 text-xs mb-3 pb-3 border-b border-primary">
-            <div className="flex items-center gap-1.5 text-gray-700">
-              <FiUser className="w-3.5 h-3.5 text-[#005655]" />
-              <span className="font-medium">{post.author_name}</span>
-            </div>
-            <div className="flex items-center gap-1.5 text-gray-700">
-              <FiClock className="w-3.5 h-3.5 text-[#005655]" />
-              <span className="font-medium">{post.read_time} min</span>
-            </div>
-          </div>
+        {/* Content */}
+        <div className="flex flex-1 flex-col p-5">
+          {post.primary_keyword && (
+            <p className="mb-2 text-[10px] font-semibold uppercase tracking-[0.12em] text-primary">
+              {post.primary_keyword}
+            </p>
+          )}
 
-          {/* Date */}
-          <p className="text-xs text-gray-600 mb-2">
-            {formatDate(post.created_at)}
-          </p>
-
-          {/* Title */}
-          <h3 className="text-xl font-bold text-gray-800 font-eurotypo mb-3 line-clamp-2 leading-tight">
+          <h3 className="mb-3 line-clamp-2 text-base font-bold leading-snug text-foreground sm:text-lg">
             {post.blog_title}
           </h3>
 
-          {/* Read More Button */}
-          <Link
-            href={`/blog/${slug}`}
-            className="inline-flex items-center gap-2 text-[#005655] font-bold text-sm hover:gap-3 transition-all"
-          >
-            <span>Read Article</span>
-            <FiArrowRight className="w-4 h-4" />
-          </Link>
+          <div className="mt-auto border-t border-primary/10 pt-3">
+            <div className="mb-3 flex items-center gap-4 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1.5">
+                <User className="h-3.5 w-3.5 text-primary" />
+                {post.author_name}
+              </span>
+              <span className="flex items-center gap-1.5">
+                <Clock className="h-3.5 w-3.5 text-primary" />
+                {post.read_time} min read
+              </span>
+              <span className="ml-auto text-[11px]">
+                {formatDate(post.created_at)}
+              </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-sm font-semibold text-primary transition-all group-hover:gap-2.5">
+              <span>Read Article</span>
+              <ArrowRight className="h-4 w-4" />
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
+      </Link>
+    </motion.div>
   );
 };
 
-// Skeleton Loader
 const BlogCardSkeleton: React.FC = () => (
-  <div className="h-full bg-white rounded-3xl overflow-hidden shadow-md border-2 border-gray-100">
-    <div className="w-full h-64 bg-gradient-to-br from-gray-200 to-gray-100 animate-pulse"></div>
-    <div className="p-6">
-      <div className="flex items-center gap-4 mb-4">
-        <div className="h-5 bg-gray-200 rounded animate-pulse w-24"></div>
-        <div className="h-5 bg-gray-200 rounded animate-pulse w-20"></div>
+  <div className="flex h-full flex-col overflow-hidden border border-primary/15 bg-background">
+    <div className="h-52 animate-pulse bg-primary/8"></div>
+    <div className="flex-1 p-5">
+      <div className="mb-2 h-3 w-20 animate-pulse rounded bg-primary/10"></div>
+      <div className="mb-1 h-5 animate-pulse rounded bg-primary/10"></div>
+      <div className="mb-4 h-5 w-3/4 animate-pulse rounded bg-primary/10"></div>
+      <div className="mt-auto border-t border-primary/10 pt-3">
+        <div className="mb-3 flex gap-4">
+          <div className="h-3 w-20 animate-pulse rounded bg-primary/10"></div>
+          <div className="h-3 w-16 animate-pulse rounded bg-primary/10"></div>
+        </div>
+        <div className="h-4 w-28 animate-pulse rounded bg-primary/10"></div>
       </div>
-      <div className="space-y-3 mb-5">
-        <div className="h-7 bg-gray-200 rounded animate-pulse"></div>
-        <div className="h-7 bg-gray-200 rounded animate-pulse w-3/4"></div>
-        <div className="h-4 bg-gray-200 rounded animate-pulse"></div>
-        <div className="h-4 bg-gray-200 rounded animate-pulse w-5/6"></div>
-      </div>
-      <div className="h-5 bg-gray-200 rounded animate-pulse w-32"></div>
     </div>
   </div>
 );
 
-// Blog Page
 export default function BlogPage() {
   const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Update or create canonical link
     let canonicalLink = document.querySelector('link[rel="canonical"]');
     if (!canonicalLink) {
       canonicalLink = document.createElement("link");
@@ -146,7 +136,6 @@ export default function BlogPage() {
     }
     canonicalLink.setAttribute("href", "https://ecofriendlyshop.us/blog");
 
-    // Cleanup on unmount
     return () => {
       const linkToRemove = document.querySelector('link[rel="canonical"]');
       if (
@@ -161,153 +150,81 @@ export default function BlogPage() {
   useEffect(() => {
     const fetchBlogs = async () => {
       if (!supabase) {
-        console.error("Supabase is not configured");
         setLoading(false);
         return;
       }
-
       const { data, error } = await supabase
         .from("blogs")
-        .select("*") // Select all fields (slug/url will be included if they exist)
+        .select("*")
         .eq("status", true)
         .order("created_at", { ascending: false });
 
-      if (error) {
-        console.error("Error fetching blogs:", error.message);
-        console.error("Error details:", error);
-        setBlogPosts([]);
-      } else {
-        console.log("Blogs fetched successfully:", data?.length || 0);
-        setBlogPosts((data as BlogPost[]) || []);
-      }
+      if (!error) setBlogPosts((data as BlogPost[]) || []);
       setLoading(false);
     };
     fetchBlogs();
   }, []);
 
   return (
-    <div className="min-h-screen bg-background relative overflow-hidden">
-      {/* Decorative Leaves */}
-      <div className="absolute right-0 top-32 w-32 h-32 sm:w-48 sm:h-48 lg:w-80 lg:h-80 z-0 pointer-events-none">
-        <img
-          src="/images/leaf_2.png"
-          alt="Decorative leaves"
-          className="w-full h-full object-contain object-right"
-        />
-      </div>
-      <div className="absolute left-0 top-32 w-32 h-32 sm:w-40 sm:h-40 lg:w-80 lg:h-80 z-0 pointer-events-none rotate-180">
-        <img
-          src="/images/leaf_2.png"
-          alt="Decorative leaves"
-          className="w-full h-full object-contain object-right"
-        />
-      </div>
-
+    <div className="min-h-screen bg-background">
       <Navbar />
 
-      {/* Hero Section */}
-      <section className="relative py-24 px-6 overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute top-20 left-10 w-32 h-32 border-4 border-primary rounded-full"></div>
-          <div className="absolute top-40 right-20 w-24 h-24 bg-primary rounded-lg rotate-45"></div>
-          <div className="absolute bottom-20 left-1/4 w-16 h-16 border-4 border-primary rotate-12"></div>
-          <div className="absolute bottom-40 right-1/3 w-20 h-20 bg-primary/30 rounded-full"></div>
-        </div>
-
-        <div className="max-w-7xl mx-auto relative z-10">
+      {/* Hero */}
+      <section className="bg-background px-4 pb-10 pt-28 sm:px-6 sm:pb-12 sm:pt-32 lg:px-8">
+        <div className="container mx-auto max-w-7xl">
           <motion.div
             className="text-center"
-            initial={{ opacity: 0, y: 50 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            initial={{ y: 14 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.6 }}
           >
-            {/* Badge */}
-            <motion.div
-              className="inline-flex items-center gap-2 bg-primary/10 border border-primary/20 px-6 py-2 rounded-full mb-6"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-            >
-              <HiOutlineSparkles className="w-5 h-5 text-primary" />
-              <span className="text-primary font-bold text-sm">
-                Latest Articles
-              </span>
-            </motion.div>
-
-            {/* Title */}
-            <motion.h1
-              className="text-5xl md:text-6xl lg:text-7xl font-black text-foreground font-eurotypo mb-6"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-            >
-              Eco
-              <span className="text-primary italic"> Insights</span>
-            </motion.h1>
-
-            {/* Description */}
-            <motion.p
-              className="text-lg md:text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4 }}
-            >
+            <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+              From Our Journal
+            </p>
+            <h1 className="text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
+              Eco Insights
+            </h1>
+            <p className="mx-auto mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground sm:text-base">
               Explore stories, tips, and insights on sustainable living. Join
               thousands discovering how small changes create big impact.
-            </motion.p>
+            </p>
           </motion.div>
         </div>
       </section>
 
-      {/* Blog Grid Section */}
-      <section className="pb-24 px-6">
-        <div className="max-w-7xl mx-auto">
+      {/* Blog Grid */}
+      <section className="px-4 pb-20 sm:px-6 sm:pb-24 lg:px-8">
+        <div className="container mx-auto max-w-7xl">
           {loading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {[...Array(6)].map((_, index) => (
-                <BlogCardSkeleton key={index} />
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {[...Array(6)].map((_, i) => (
+                <BlogCardSkeleton key={i} />
               ))}
             </div>
           ) : blogPosts.length === 0 ? (
             <motion.div
-              className="text-center py-20"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              className="py-20 text-center"
+              initial={{ y: 14 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.6 }}
             >
-              <BsBookmarkHeart className="w-20 h-20 text-primary mx-auto mb-6" />
-              <h3 className="text-2xl font-bold text-foreground font-eurotypo mb-3">
+              <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
+                Coming Soon
+              </p>
+              <h3 className="mb-3 text-2xl font-bold text-foreground">
                 No Articles Yet
               </h3>
-              <p className="text-muted-foreground text-lg">
+              <p className="text-sm text-muted-foreground sm:text-base">
                 We're crafting amazing eco-friendly content for you. Check back
                 soon!
               </p>
             </motion.div>
           ) : (
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: {},
-                visible: { transition: { staggerChildren: 0.1 } },
-              }}
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
               {blogPosts.map((post, index) => (
-                <motion.div
-                  key={post.id}
-                  variants={{
-                    hidden: { opacity: 0, y: 50 },
-                    visible: { opacity: 1, y: 0 },
-                  }}
-                  transition={{ duration: 0.5 }}
-                >
-                  <BlogCard post={post} />
-                </motion.div>
+                <BlogCard key={post.id} post={post} index={index} />
               ))}
-            </motion.div>
+            </div>
           )}
         </div>
       </section>
@@ -316,4 +233,3 @@ export default function BlogPage() {
     </div>
   );
 }
-

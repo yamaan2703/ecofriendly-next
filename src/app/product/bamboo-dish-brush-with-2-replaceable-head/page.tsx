@@ -3,45 +3,32 @@
 import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import HeroSection from "@/components/HeroSection";
 import ProductSection from "@/components/ProductsSection";
-import BenefitsSection from "@/components/BenefitsSection";
-import FeaturesSection from "@/components/FeaturesSection";
-import ProductDetailingSection from "@/components/ProductDetailSection";
-import ProductSpecSection from "@/components/SpecificationSection";
-import ProductShowcaseSection from "@/components/ProductShowcaseSection";
-import NewsLetter from "@/components/NewsLetter";
 import StickyBottomBar from "@/components/StickyBottomBar";
+import { DishBrushDetailsContent } from "@/components/product/DishBrushDetailsContent";
+import { dishbrushPageContent } from "@/data/dishbrush-page-content";
 import { useContent } from "@/contexts/ContentContext";
 
 export default function DishwasherPage() {
   const { switchToHome2 } = useContent();
 
   useEffect(() => {
-    // Set content to dishwasher (home2) when page loads
     switchToHome2();
   }, [switchToHome2]);
 
   useEffect(() => {
-    // Only run on client side
     if (typeof window === "undefined") return;
 
-    // Update meta tags for SEO
-    document.title = "Bamboo Dish Brush – Durable, Eco-Friendly & Sustainable";
+    document.title = dishbrushPageContent.title;
 
-    // Update or create meta description
     let metaDescription = document.querySelector('meta[name="description"]');
     if (!metaDescription) {
       metaDescription = document.createElement("meta");
       metaDescription.setAttribute("name", "description");
       document.head.appendChild(metaDescription);
     }
-    metaDescription.setAttribute(
-      "content",
-      "Bamboo dish brush with 2 replaceable heads – durable, eco-friendly, and ideal for dishes. Make your kitchen zero-waste today!"
-    );
+    metaDescription.setAttribute("content", dishbrushPageContent.shortDescription);
 
-    // Update or create canonical link
     let canonicalLink = document.querySelector('link[rel="canonical"]');
     if (!canonicalLink) {
       canonicalLink = document.createElement("link");
@@ -53,7 +40,6 @@ export default function DishwasherPage() {
       "https://ecofriendlyshop.us/product/bamboo-dish-brush-with-2-replaceable-head"
     );
 
-    // Add Schema Markup (JSON-LD) - only if not already present
     let schemaScript = document.getElementById("product-schema") as HTMLScriptElement;
     if (!schemaScript) {
       schemaScript = document.createElement("script");
@@ -64,15 +50,14 @@ export default function DishwasherPage() {
     schemaScript.textContent = JSON.stringify({
       "@context": "http://schema.org/",
       "@type": "Product",
-      name: "Bamboo Dish Brush with 2 Replacement Heads | Eco-Friendly, Biodegradable",
+      name: dishbrushPageContent.title,
       url: "https://ecofriendlyshop.us/product/bamboo-dish-brush-with-2-replaceable-head",
       image: [
         "https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/1759395957301-7huidefvctj.png",
         "https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/1759395957306-6sty5s1bwaf.png",
         "https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/1759395957307-z4zfwjkkr.png",
       ],
-      description:
-        "Our Bamboo Dish Brush is a sustainable kitchen essential, featuring natural sisal bristles and a durable FSC-certified bamboo handle. Safe for all surfaces, including non-stick cookware, it comes with 2 replacement heads for long-lasting, eco-friendly cleaning.",
+      description: dishbrushPageContent.longDescription,
       brand: {
         "@type": "Brand",
         name: "EcoFriendly Shop",
@@ -112,7 +97,7 @@ export default function DishwasherPage() {
           availability: "http://schema.org/InStock",
           price: 25.99,
           priceCurrency: "USD",
-          url: "https://ecofriendlyshop.us/product/bamboo-dish-brush-with-2-replaceable-head?variant=default",
+          url: "https://ecofriendlyshop.us/product/bamboo-dish-brush-with-2-replaceable-head",
           itemCondition: "http://schema.org/NewCondition",
           shippingDetails: {
             "@type": "OfferShippingDetails",
@@ -130,8 +115,6 @@ export default function DishwasherPage() {
       ],
     });
 
-
-    // Cleanup on unmount
     return () => {
       const schemaToRemove = document.getElementById("product-schema");
       if (schemaToRemove) {
@@ -143,21 +126,23 @@ export default function DishwasherPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-
-      <main>
-        <HeroSection />
-        <ProductSection />
-        <BenefitsSection />
-        <FeaturesSection />
-        <ProductDetailingSection />
-        <ProductSpecSection />
-        <ProductShowcaseSection />
-        <NewsLetter />
+      <main className="pt-[4.25rem]">
+        <ProductSection
+          productCopy={{
+            title: dishbrushPageContent.title,
+            shortDescription: dishbrushPageContent.shortDescription,
+          }}
+          productDetails={{
+            whatYouGet: dishbrushPageContent.whatYouGet,
+            benefits: dishbrushPageContent.benefits,
+            instructions: dishbrushPageContent.instructions,
+            materials: dishbrushPageContent.materials,
+          }}
+        />
+        <DishBrushDetailsContent />
       </main>
-
       <Footer />
       <StickyBottomBar />
     </div>
   );
 }
-

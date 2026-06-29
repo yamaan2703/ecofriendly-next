@@ -3,15 +3,10 @@
 import React, { useEffect } from "react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import HeroSection from "@/components/HeroSection";
 import ProductSection from "@/components/ProductsSection";
-import BenefitsSection from "@/components/BenefitsSection";
-import FeaturesSection from "@/components/FeaturesSection";
-import ProductDetailingSection from "@/components/ProductDetailSection";
-import ProductSpecSection from "@/components/SpecificationSection";
-import ProductShowcaseSection from "@/components/ProductShowcaseSection";
-import NewsLetter from "@/components/NewsLetter";
 import StickyBottomBar from "@/components/StickyBottomBar";
+import { ToothbrushDetailsContent } from "@/components/product/ToothbrushDetailsContent";
+import { toothbrushPageContent } from "@/data/toothbrush-page-content";
 import { useContent } from "@/contexts/ContentContext";
 
 export default function ToothbrushPage() {
@@ -27,7 +22,7 @@ export default function ToothbrushPage() {
     if (typeof window === "undefined") return;
 
     // Update meta tags for SEO
-    document.title = "Bamboo Toothbrush 10 Pack - Eco-friendly Shop";
+    document.title = toothbrushPageContent.title;
 
     // Update or create meta description
     let metaDescription = document.querySelector('meta[name="description"]');
@@ -38,7 +33,7 @@ export default function ToothbrushPage() {
     }
     metaDescription.setAttribute(
       "content",
-      "Switch to eco-friendly brushing with our Bamboo Toothbrush 10-Pack. Charcoal bristles, sustainable bamboo, and plastic-free packaging for a greener clean."
+      toothbrushPageContent.shortDescription
     );
 
     // Update or create canonical link
@@ -64,7 +59,7 @@ export default function ToothbrushPage() {
     schemaScript.textContent = JSON.stringify({
       "@context": "http://schema.org/",
       "@type": "Product",
-      name: "Bamboo Toothbrushes – 10 Pack | Eco-Friendly, Biodegradable, Soft BPA-Free Bristles",
+      name: toothbrushPageContent.title,
       url: "https://ecofriendlyshop.us/product/bamboo-toothbrush-10-pack",
       image: [
         "https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/1761213979281-imxyk5nmey.png",
@@ -72,8 +67,7 @@ export default function ToothbrushPage() {
         "https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/1761213979284-yxdkk40kcb.png",
         "https://dnpxijvjjdokgppqxnap.supabase.co/storage/v1/object/public/images/product-images/1761213979284-c70lvh18mam.png",
       ],
-      description:
-        "Switch to a toothbrush that's good for you and the planet. Our Bamboo Toothbrushes 10-Pack is crafted from sustainably harvested bamboo with ultra-soft, BPA-free nylon bristles infused with charcoal for a deeper clean. Designed with a smooth, ergonomic grip and packaged 100% plastic-free, these eco-friendly brushes are the perfect sustainable choice for families, travelers, and anyone looking to reduce plastic waste—without compromising on performance.",
+      description: toothbrushPageContent.longDescription,
       brand: {
         "@type": "Brand",
         name: "EcoFriendly Shop",
@@ -148,15 +142,20 @@ export default function ToothbrushPage() {
   return (
     <div className="min-h-screen bg-background">
       <Navbar />
-      <main>
-        <HeroSection />
-        <ProductSection />
-        <BenefitsSection />
-        <FeaturesSection />
-        <ProductDetailingSection />
-        <ProductSpecSection />
-        <ProductShowcaseSection />
-        <NewsLetter />
+      <main className="pt-[4.25rem]">
+        <ProductSection
+          productCopy={{
+            title: toothbrushPageContent.title,
+            shortDescription: toothbrushPageContent.shortDescription,
+          }}
+          productDetails={{
+            whatYouGet: toothbrushPageContent.whatYouGet,
+            benefits: toothbrushPageContent.benefits,
+            instructions: toothbrushPageContent.instructions,
+            materials: toothbrushPageContent.materials,
+          }}
+        />
+        <ToothbrushDetailsContent />
       </main>
       <Footer />
       <StickyBottomBar />
