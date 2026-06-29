@@ -37,8 +37,8 @@ export function ProductReviewsSection({
       <div className="container mx-auto max-w-7xl">
         <motion.div
           className="mb-10 text-center sm:mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ y: 16 }}
+          whileInView={{ y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
@@ -61,8 +61,8 @@ export function ProductReviewsSection({
             <motion.article
               key={review.title}
               className="flex flex-col overflow-hidden bg-primary shadow-[2px_6px_16px_rgba(0,64,63,0.22)]"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 12 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
             >

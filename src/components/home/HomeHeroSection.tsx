@@ -19,8 +19,8 @@ export function HomeHeroSection() {
       <div className="container relative z-10 mx-auto max-w-7xl px-4 pb-12 pt-28 sm:px-6 sm:pb-14 sm:pt-32 lg:px-8 lg:pt-36">
         <motion.div
           className="max-w-lg sm:max-w-xl"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ y: 16 }}
+          animate={{ y: 0 }}
           transition={{ duration: 0.6 }}
         >
           <p className="mb-2 text-[11px] font-semibold uppercase tracking-[0.22em] text-white [text-shadow:0_1px_8px_rgba(0,0,0,0.35)] sm:text-xs">

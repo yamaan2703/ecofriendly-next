@@ -46,8 +46,8 @@ function BenefitCard({ benefit, index }: { benefit: BenefitItem; index: number }
   return (
     <motion.div
       className="flex flex-col items-center px-3 py-6 text-center sm:px-4"
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ y: 12 }}
+      whileInView={{ y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
     >
@@ -77,8 +77,8 @@ export function ProductBenefitsSection({
       <div className="container mx-auto max-w-6xl">
         <motion.div
           className="mb-12 text-center sm:mb-14"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ y: 16 }}
+          whileInView={{ y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
@@ -101,8 +101,8 @@ export function ProductBenefitsSection({
 
           <motion.div
             className="lg:col-span-6"
-            initial={{ opacity: 0, scale: 0.96 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            initial={{ scale: 0.97 }}
+            whileInView={{ scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >

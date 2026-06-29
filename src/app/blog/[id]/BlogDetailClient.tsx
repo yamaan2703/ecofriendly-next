@@ -49,8 +49,8 @@ export default function BlogDetailClient({ blogPost }: BlogDetailClientProps) {
           <motion.button
             onClick={() => router.push("/blog")}
             className="mb-8 flex items-center gap-2 text-sm font-semibold text-primary transition-all hover:gap-3"
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ x: -6 }}
+            animate={{ x: 0 }}
             transition={{ duration: 0.4 }}
           >
             <ArrowLeft className="h-4 w-4" />
@@ -59,8 +59,8 @@ export default function BlogDetailClient({ blogPost }: BlogDetailClientProps) {
 
           {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 14 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.6 }}
           >
             {blogPost.primary_keyword && (
@@ -105,8 +105,8 @@ export default function BlogDetailClient({ blogPost }: BlogDetailClientProps) {
           {blogPost.featured_image && (
             <motion.div
               className="mb-12 overflow-hidden border border-primary/15"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
             >
               <img
@@ -123,8 +123,8 @@ export default function BlogDetailClient({ blogPost }: BlogDetailClientProps) {
 
           {/* Article Content */}
           <motion.article
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             <div className="prose prose-lg max-w-none">
@@ -138,8 +138,8 @@ export default function BlogDetailClient({ blogPost }: BlogDetailClientProps) {
           {/* Bottom CTA */}
           <motion.div
             className="mt-14 flex flex-col items-center justify-between gap-5 bg-[#DCE7C8] p-7 sm:flex-row sm:p-8"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 12 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <div>

@@ -24,8 +24,8 @@ export function ProductHighlightsSection({
               <motion.article
                 key={highlight.title}
                 className="flex h-full flex-col bg-[#FFFFDD] px-6 py-8 sm:px-7 sm:py-9"
-                initial={{ opacity: 0, y: 16 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ y: 10 }}
+                whileInView={{ y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: index * 0.06 }}
               >

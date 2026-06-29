@@ -42,8 +42,8 @@ const BlogCard: React.FC<{ post: BlogPost; index: number }> = ({
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 24 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={{ y: 14 }}
+      whileInView={{ y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 0.5, delay: index * 0.08 }}
       className="h-full"
@@ -174,8 +174,8 @@ export default function BlogPage() {
         <div className="container mx-auto max-w-7xl">
           <motion.div
             className="text-center"
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{ y: 14 }}
+            animate={{ y: 0 }}
             transition={{ duration: 0.6 }}
           >
             <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">
@@ -204,8 +204,8 @@ export default function BlogPage() {
           ) : blogPosts.length === 0 ? (
             <motion.div
               className="py-20 text-center"
-              initial={{ opacity: 0, y: 24 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{ y: 14 }}
+              animate={{ y: 0 }}
               transition={{ duration: 0.6 }}
             >
               <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.22em] text-primary">

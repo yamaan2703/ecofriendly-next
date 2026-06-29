@@ -12,8 +12,8 @@ export function ShopByCategorySection() {
       <div className="container mx-auto max-w-7xl">
         <motion.div
           className="mb-10 text-center"
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ y: 16 }}
+          whileInView={{ y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
@@ -29,8 +29,8 @@ export function ShopByCategorySection() {
           {categories.items.map((category, index) => (
             <motion.div
               key={category.href}
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={{ y: 12 }}
+              whileInView={{ y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.08 }}
               className="h-full w-full max-w-[280px] sm:w-[calc(50%-0.625rem)] sm:max-w-[300px] lg:w-[calc(25%-0.9375rem)]"

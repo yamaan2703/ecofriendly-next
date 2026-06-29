@@ -21,8 +21,8 @@ export function ToothbrushDetailsContent() {
       <section className="border-t border-primary/10 bg-background px-4 py-12 sm:px-6 sm:py-16 lg:px-8">
         <div className="container mx-auto max-w-7xl">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
+            initial={{ y: 12 }}
+            whileInView={{ y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >

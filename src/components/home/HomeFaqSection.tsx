@@ -14,8 +14,8 @@ export function HomeFaqSection() {
       <div className="container mx-auto max-w-3xl">
         <motion.div
           className="mb-10 text-center sm:mb-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ y: 16 }}
+          whileInView={{ y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
@@ -34,8 +34,8 @@ export function HomeFaqSection() {
             return (
               <motion.div
                 key={item.question}
-                initial={{ opacity: 0, y: 12 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ y: 8 }}
+                whileInView={{ y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: index * 0.04 }}
               >
