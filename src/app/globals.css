@@ -2,55 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Custom Font Declarations */
-@font-face {
-  font-family: 'Notulen Serif';
-  src: url('/fonts/FontsFree-Net-Notulen-Serif-Display-Extra-Bold-.ttf') format('truetype');
-  font-weight: 800;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Eurotypo';
-  src: url('/fonts/EurotypoBKL.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Eurotypo';
-  src: url('/fonts/EurotypoBKL-Bold.otf') format('opentype');
-  font-weight: 700;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Eurotypo';
-  src: url('/fonts/EurotypoBKL-Heavy.otf') format('opentype');
-  font-weight: 900;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Eurotypo';
-  src: url('/fonts/EurotypoBKL-Italic.otf') format('opentype');
-  font-weight: 400;
-  font-style: italic;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Eurotypo';
-  src: url('/fonts/EurotypoBKL-BoldItalic.otf') format('opentype');
-  font-weight: 700;
-  font-style: italic;
-  font-display: swap;
-}
-
 /* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
 All colors MUST be HSL.
 */
@@ -195,7 +146,7 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

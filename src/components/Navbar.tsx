@@ -7,22 +7,22 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useCart } from "@/contexts/CartContext";
 
 const navItems = [
+  { label: "Home", action: "/", type: "route" },
   {
     label: "Toothbrush",
-    action: "product/bamboo-toothbrush-10-pack",
+    action: "/product/bamboo-toothbrush-10-pack",
     type: "route",
   },
   {
     label: "Dishwasher",
-    action: "product/bamboo-dish-brush-with-2-replaceable-head",
+    action: "/product/bamboo-dish-brush-with-2-replaceable-head",
     type: "route",
   },
-  { label: "Blog", action: "blog", type: "route" },
+  { label: "Blog", action: "/blog", type: "route" },
 ];
 
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [activeSection, setActiveSection] = useState("home");
   const [isScrolled, setIsScrolled] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
@@ -31,30 +31,13 @@ const Navbar: React.FC = () => {
 
   const cartItemCount = getTotalItems();
 
-  const handleNavigation = (item: {
-    label: string;
-    action: string;
-    type: string;
-  }) => {
-    if (item.type === "route") {
-      router.push(`/${item.action}`);
-    } else {
-      scrollToSection(item.action);
-    }
+  const handleNavigation = (item: { action: string }) => {
+    router.push(item.action);
     setIsOpen(false);
   };
 
-  const scrollToSection = (sectionId: string) => {
-    if (typeof window !== "undefined") {
-      const element = document.getElementById(sectionId);
-      if (element) {
-        element.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-  };
-
   const handleLogoClick = () => {
-    router.push("/product/bamboo-toothbrush-10-pack");
+    router.push("/");
     setIsOpen(false);
   };
 
@@ -78,135 +61,135 @@ const Navbar: React.FC = () => {
   const isLoginPage = pathname === "/login";
   const isSignupPage = pathname === "/signup";
   const isBlogPage = pathname === "/blog";
+  const isHomePage = pathname === "/";
   const isToothbrushPage = pathname === "/product/bamboo-toothbrush-10-pack";
   const isDishwasherPage =
     pathname === "/product/bamboo-dish-brush-with-2-replaceable-head";
 
-  // Main page is now the toothbrush product page
-  const isHomePage = pathname === "/product/bamboo-toothbrush-10-pack";
+  function isNavItemActive(action: string) {
+    if (action === "/") return isHomePage;
+    if (action === "/blog") return isBlogPage;
+    if (action === "/product/bamboo-toothbrush-10-pack") return isToothbrushPage;
+    if (action === "/product/bamboo-dish-brush-with-2-replaceable-head")
+      return isDishwasherPage;
+    return false;
+  }
 
   useEffect(() => {
     const handleScroll = () => {
-      if (typeof window !== "undefined") {
-        const scrollPosition = window.scrollY;
-        setIsScrolled(scrollPosition > 50);
+      if (typeof window === "undefined") return;
 
-        const scrollSections = navItems
-          .filter((item) => item.type === "scroll")
-          .map((item) => item.action);
-        const currentSection = scrollSections.find((section) => {
-          const element = document.getElementById(section);
-          if (element) {
-            const rect = element.getBoundingClientRect();
-            return rect.top <= 100 && rect.bottom >= 100;
-          }
-          return false;
-        });
-        if (currentSection) {
-          setActiveSection(currentSection);
-        }
-      }
+      setIsScrolled(window.scrollY > 20);
     };
 
-    if (typeof window !== "undefined") {
-      window.addEventListener("scroll", handleScroll);
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  const showNavbarBg = isScrolled || isOpen;
+  const isHeroNav = isHomePage && !showNavbarBg;
+
+  const getNavLinkClass = (isActive: boolean) => {
+    if (isHeroNav) {
+      return isActive
+        ? "font-semibold text-white after:w-full [text-shadow:0_1px_6px_rgba(0,0,0,0.45)]"
+        : "text-white/90 hover:text-white after:w-0 hover:after:w-full [text-shadow:0_1px_6px_rgba(0,0,0,0.45)]";
+    }
+
+    return isActive
+      ? "font-semibold text-primary after:w-full"
+      : "text-primary/80 hover:text-primary after:w-0 hover:after:w-full";
+  };
+
+  const getIconButtonClass = (isActive: boolean) => {
+    if (isHeroNav) {
+      return isActive ? "text-white" : "text-white/90 hover:text-white";
+    }
+
+    return isActive ? "text-primary" : "text-primary/80 hover:text-primary";
+  };
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled || isOpen
-        ? "bg-background-cream/95 backdrop-blur-sm shadow-soft"
-        : "bg-background/80 backdrop-blur-sm"
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${showNavbarBg
+        ? "border-b border-primary/10 bg-[#FFFFDD] shadow-md backdrop-blur-sm"
+        : "bg-transparent"
         }`}
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-[4.25rem] items-center justify-between gap-4">
           {/* Logo */}
-          <div className="flex items-center">
-            <button
-              onClick={handleLogoClick}
-              className="flex items-center hover:opacity-80 transition-opacity"
-            >
-              <img
-                src="/images/ecofriendly_dark.png"
-                alt="EcoFriendly"
-                className="h-8 w-auto"
-              />
-            </button>
-          </div>
+          <button
+            onClick={handleLogoClick}
+            className="flex flex-shrink-0 items-center transition-opacity hover:opacity-90"
+            aria-label="Go to homepage"
+          >
+            <img
+              src={
+                showNavbarBg
+                  ? "/images/ecofriendly_dark.png"
+                  : "/images/ecofriendly_light.png"
+              }
+              alt="Ecofriendly Shop"
+              className={`h-8 w-auto object-contain sm:h-9`}
+            />
+          </button>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
-            {navItems.map((item) => (
-              <button
-                key={item.action}
-                onClick={() => handleNavigation(item)}
-                className={`relative px-5 py-2 font-medium transition-colors rounded-lg text-sm ${(isHomePage &&
-                  item.type === "scroll" &&
-                  activeSection === item.action) ||
-                  (item.type === "route" &&
-                    ((isBlogPage && item.action === "blog") ||
-                      (isToothbrushPage &&
-                        item.action === "product/bamboo-toothbrush-10-pack") ||
-                      (isDishwasherPage &&
-                        item.action ===
-                        "product/bamboo-dish-brush-with-2-replaceable-head")))
-                  ? "text-primary bg-[#DCE7C8]"
-                  : "text-primary hover:bg-primary hover:text-white"
-                  }`}
-              >
-                {item.label}
-              </button>
-            ))}
+          <div className="hidden items-center gap-5 lg:gap-6 md:flex">
+            {navItems.map((item) => {
+              const isActive = isNavItemActive(item.action);
+
+              return (
+                <button
+                  key={item.action}
+                  onClick={() => handleNavigation(item)}
+                  className={`relative pb-1 text-sm font-medium transition-colors after:absolute after:bottom-0 after:left-0 after:h-0.5 after:bg-current after:transition-all ${getNavLinkClass(
+                    isActive
+                  )}`}
+                >
+                  {item.label}
+                </button>
+              );
+            })}
           </div>
 
           {/* Action Icons */}
-          <div className="flex items-center space-x-1">
+          <div className="flex flex-shrink-0 items-center gap-2">
             {/* User Icon */}
             <button
               onClick={handleUserClick}
-              className={`relative p-2 font-medium transition-colors rounded-lg text-sm ${isProfilePage || isLoginPage || isSignupPage
-                ? "text-primary bg-[#DCE7C8]"
-                : "text-primary hover:bg-primary hover:text-white"
-                }`}
+              className={`relative p-2 transition-colors ${getIconButtonClass(
+                isProfilePage || isLoginPage || isSignupPage
+              )}`}
               aria-label={user ? "Profile" : "Login"}
               title={user ? "Profile" : "Login"}
             >
-              <User className="w-4 h-4" />
+              <User className="h-[17px] w-[17px] sm:h-[18px] sm:w-[18px]" />
             </button>
 
-            {/* Cart Icon */}
             <button
               onClick={handleCartClick}
-              className={`relative p-2 font-medium transition-colors rounded-lg text-sm ${isCartPage
-                ? "text-primary bg-[#DCE7C8]"
-                : "text-primary hover:bg-primary hover:text-white"
-                }`}
+              className={`relative p-2 transition-colors ${getIconButtonClass(
+                isCartPage
+              )}`}
               aria-label="Cart"
               title="Cart"
             >
-              <ShoppingBag className="w-4 h-4" />
+              <ShoppingBag className="h-[17px] w-[17px] sm:h-[18px] sm:w-[18px]" />
               {cartItemCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center">
+                <span className="absolute -right-1 -top-1 flex h-4 min-w-4 items-center justify-center rounded-full bg-[#DCE7C8] px-1 text-[10px] font-bold text-primary">
                   {cartItemCount > 99 ? "99+" : cartItemCount}
                 </span>
               )}
             </button>
 
-            {/* Mobile Menu Button */}
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden p-2 text-primary hover:bg-primary-lighter rounded-lg transition-colors"
+              className={`p-2 transition-colors md:hidden ${getIconButtonClass(false)}`}
             >
-              {isOpen ? (
-                <X className="w-6 h-6" />
-              ) : (
-                <Menu className="w-6 h-6" />
-              )}
+              {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
             </button>
           </div>
         </div>
@@ -222,27 +205,18 @@ const Navbar: React.FC = () => {
           />
 
           {/* Menu Panel */}
-          <div className="fixed top-16 left-0 right-0 bg-card border-b border-border shadow-xl z-50 md:hidden">
+          <div className="fixed left-0 right-0 top-[4.25rem] z-50 border-b border-border bg-white shadow-xl md:hidden">
             <div className="container mx-auto px-4 py-6 space-y-2">
               {/* Navigation Items */}
               {navItems.map((item) => (
                 <button
                   key={item.action}
                   onClick={() => handleNavigation(item)}
-                  className={`w-full text-left px-4 py-3 rounded-lg font-medium transition-colors ${(isHomePage &&
-                    item.type === "scroll" &&
-                    activeSection === item.action) ||
-                    (item.type === "route" &&
-                      ((isBlogPage && item.action === "blog") ||
-                        (isToothbrushPage &&
-                          item.action ===
-                          "product/bamboo-toothbrush-10-pack") ||
-                        (isDishwasherPage &&
-                          item.action ===
-                          "product/bamboo-dish-brush-with-2-replaceable-head")))
-                    ? "text-primary-foreground bg-primary"
-                    : "text-primary hover:bg-primary-lighter"
-                    }`}
+                  className={`w-full rounded-lg px-4 py-3 text-left font-medium transition-colors ${
+                    isNavItemActive(item.action)
+                      ? "bg-primary text-primary-foreground"
+                      : "text-primary hover:bg-primary-lighter"
+                  }`}
                 >
                   {item.label}
                 </button>

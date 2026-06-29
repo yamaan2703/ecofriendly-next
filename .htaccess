@@ -1,0 +1,52 @@
+Options -MultiViews
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Never rewrite Next.js build assets or real files
+  RewriteRule ^_next/ - [L]
+  RewriteRule ^(favicon\.ico|robots\.txt|sitemap\.xml)$ - [L]
+
+  # Keep canonical URLs without trailing slash (except real folders)
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # If request is an existing file or directory, serve it directly
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # Prefer folder-style exports first (e.g. /blog/slug -> /blog/slug/index.html)
+  RewriteCond %{REQUEST_FILENAME}/index.html -f
+  RewriteRule ^(.+)$ $1/index.html [L]
+
+  # Map clean URLs to exported HTML files (e.g. /blog/post -> /blog/post.html)
+  RewriteCond %{REQUEST_URI} !\.[a-zA-Z0-9]{1,8}$
+  RewriteCond %{REQUEST_FILENAME}.html -f
+  RewriteRule ^(.+)$ $1.html [L]
+
+  # Fallback: serve root index.html (SPA-style) if present
+  RewriteCond %{DOCUMENT_ROOT}/index.html -f
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Long cache for static assets
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresByType text/css "access plus 1 month"
+  ExpiresByType application/javascript "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 year"
+  ExpiresByType image/png "access plus 1 year"
+  ExpiresByType image/webp "access plus 1 year"
+  ExpiresByType image/avif "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+# Gzip compression
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript application/json image/svg+xml
+</IfModule>
+
+ErrorDocument 404 /404.html

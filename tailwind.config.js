@@ -52,8 +52,9 @@ module.exports = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        'notulen-serif': ['Notulen Serif', 'serif'],
-        'eurotypo': ['Eurotypo', 'sans-serif'],
+        sans: ["var(--font-open-sans)", "Open Sans", "sans-serif"],
+        eurotypo: ["var(--font-open-sans)", "Open Sans", "sans-serif"],
+        "notulen-serif": ["var(--font-open-sans)", "Open Sans", "sans-serif"],
       },
       backgroundImage: {
         'gradient-eco': 'var(--gradient-eco)',
